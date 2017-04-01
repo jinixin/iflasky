@@ -1,0 +1,12 @@
+Dear {{ user.username }},
+
+Welcome to STARS!
+
+To confirm your account, please click on the following link:
+{{ url_for('auth.confirm',token=token, _external=True) }}
+
+Best Regards,
+The STARS Team
+
+
+Note: Do not Replay

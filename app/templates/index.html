@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Hello, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Stranger{% endif %}!</h1><br/>
+    <h3>
+        {% if current_user.is_authenticated %}
+        Click&nbsp;<a href="{{ url_for('auth.change_password') }}">here</a>&nbsp;to change your password<br/>
+        {% endif %}
+    </h3>
+</div>
+{% endblock %}
