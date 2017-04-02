@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 04/01/2017 18:25:31 PM
+ Date: 04/02/2017 11:16:53 AM
 */
 
 SET NAMES utf8;
@@ -24,6 +24,8 @@ DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) DEFAULT NULL,
+  `default` tinyint(1) DEFAULT NULL,
+  `permit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

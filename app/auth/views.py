@@ -6,6 +6,8 @@ from ..models import User
 from flask_login import login_user, logout_user, login_required, current_user
 from .. import db
 from ..email import send_email
+from ..decorators import require_permit
+from ..models import Permit
 
 
 @auth.before_app_request
