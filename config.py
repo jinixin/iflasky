@@ -14,9 +14,9 @@ class Config(object):
     MAIL_USE_SSL = True
     MAIL_USERNAME = environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
-    FLASKY_MAIL_SUBJECT_PREFIX = '[%s]' % environ.get('FLASKY_MAIL_SENDER')[:5]
-    FLASKY_MAIL_SENDER = environ.get('FLASKY_MAIL_SENDER')
-    FLASKY_MAIL_ADMIN = environ.get('FLASKY_MAIL_ADMIN')
+    MAIL_ADMIN = environ.get('MAIL_ADMIN')
+    MAIL_SENDER = 'STARS Admin <%s>' % MAIL_ADMIN
+    MAIL_SUBJECT_PREFIX = '[%s]' % MAIL_SENDER[:5]
 
     @staticmethod
     def init_app(app):

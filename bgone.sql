@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 04/02/2017 11:16:53 AM
+ Date: 04/03/2017 15:02:23 PM
 */
 
 SET NAMES utf8;
@@ -28,7 +28,7 @@ CREATE TABLE `roles` (
   `permit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `users`
@@ -41,11 +41,16 @@ CREATE TABLE `users` (
   `email` varchar(64) DEFAULT NULL,
   `password_hash` varchar(128) DEFAULT NULL,
   `confirmed` tinyint(1) DEFAULT NULL,
+  `about_me` varchar(64) DEFAULT NULL,
+  `last_seen` datetime DEFAULT NULL,
+  `location` varchar(64) DEFAULT NULL,
+  `member_since` datetime DEFAULT NULL,
+  `name` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_users_username` (`username`),
   UNIQUE KEY `ix_users_email` (`email`),
   KEY `role_id` (`role_id`),
   CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -12,9 +12,10 @@ from ..models import Permit
 
 @auth.before_app_request
 def before_request():
-    if current_user.is_authenticated and not current_user.confirmed \
-            and request.endpoint[:5] != 'auth.' and request.endpoint != 'static':
-        return rt('auth/unconfirmed.html')
+    if current_user.is_authenticated:
+        current_user.update_last_seen()
+        if not current_user.confirmed and request.endpoint[:5] != 'auth.' and request.endpoint != 'static':
+            return rt('auth/unconfirmed.html')
 
 
 @auth.route('/login', methods=['GET', 'POST'])

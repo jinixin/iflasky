@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>{{ user.username }}
+        {% if user.name %}
+        <small>
+            {{ user.name }}
+        </small>
+        {% endif %}
+    </h1>
+</div>
+<p>
+<h3>
+    {{ user.email }}<br/>
+    {% if user.location %}
+    <a href="http://www.openstreetmap.org/search?query={{ user.location }}">{{ user.location }}</a><br/>
+    {% endif %}
+</h3>
+</p>
+<p>
+<h4>
+    {% if user.about_me %}
+    {{ user.about_me }}<br/>
+    {% endif %}
+</h4>
+</p>
+<p>
+    <b>Joined at</b> {{ moment(user.member_since).format('LLL') }}<br/>
+    <b>Last visited</b> {{ moment(user.last_seen).fromNow(refresh=True) }}
+</p>
+{% endblock %}
