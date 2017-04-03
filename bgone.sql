@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 04/03/2017 18:36:24 PM
+ Date: 04/03/2017 23:52:45 PM
 */
 
 SET NAMES utf8;
@@ -46,6 +46,7 @@ CREATE TABLE `users` (
   `location` varchar(64) DEFAULT NULL,
   `member_since` datetime DEFAULT NULL,
   `name` varchar(64) DEFAULT NULL,
+  `avatar_hash` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_users_username` (`username`),
   UNIQUE KEY `ix_users_email` (`email`),

@@ -1,0 +1,11 @@
+.image-thumbnail{
+    float:left;
+}
+
+.profile-header {
+    float:left;
+}
+
+.clear-float{
+    clear:both;
+}

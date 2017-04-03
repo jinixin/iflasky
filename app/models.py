@@ -3,8 +3,9 @@ from . import db, login_manager
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app
+from flask import current_app, request
 from datetime import datetime
+from hashlib import md5
 
 
 class Permit(object):
@@ -58,10 +59,14 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.String(64))
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    avatar_hash = db.Column(db.String(64))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)  # super(类名, self)==基类引用
+        if self.avatar_hash is None:
+            self.avatar_hash = md5(self.email.encode('utf-8')).hexdigest()
+            db.session.add(self)
         if self.role is None:
             if self.email == current_app.config['MAIL_ADMIN']:
                 self.role = Role.query.filter_by(name='Administrator').first()
@@ -112,6 +117,10 @@ class User(UserMixin, db.Model):
     def update_last_seen(self):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
+
+    def make_gravatar_url(self, size=80, kind='retro'):
+        url = 'http://www.gravatar.com/avatar'
+        return '%s/%s?s=%s&d=%s' % (url, self.avatar_hash, size, kind)
 
 
 class AnonymousUser(AnonymousUserMixin):

@@ -1,3 +1,4 @@
+# coding=utf-8
 from flask import render_template as rt, flash, redirect, url_for
 from . import main
 from ..decorators import require_permit, require_admin_permit
@@ -5,6 +6,7 @@ from ..models import Permit, User
 from flask_login import login_required, current_user
 from .forms import EditProfileForm, AdminEditProfileForm
 from .. import db
+from hashlib import md5
 
 
 @main.route('/')
@@ -56,6 +58,7 @@ def admin_edit_profile(user_id):
         user.role_id = form.role.data
         user.location = form.location.data
         user.about_me = form.about_me.data
+        # user.avatar_hash = md5(user.email.encode('utf-8')).hexdigest() #邮箱变了，头像不该变
         db.session.add(user)
         flash('Administrator edit profile successfully.')
         return redirect(url_for('main.user_profile', username=user.username))
