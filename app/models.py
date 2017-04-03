@@ -106,6 +106,9 @@ class User(UserMixin, db.Model):
     def check_permit(self, permit):
         return self.role is not None and self.role.permit & permit == permit
 
+    def is_administerator(self):
+        return self.check_permit(Permit.admin)
+
     def update_last_seen(self):
         self.last_seen = datetime.utcnow()
         db.session.add(self)

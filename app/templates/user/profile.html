@@ -29,4 +29,11 @@
     <b>Joined at</b> {{ moment(user.member_since).format('LLL') }}<br/>
     <b>Last visited</b> {{ moment(user.last_seen).fromNow(refresh=True) }}
 </p>
+{% if current_user == user %}
+<a class="btn btn-primary" href="{{ url_for('main.edit_profile') }}" role="button">Edit Profile</a>
+{% endif %}
+{% if current_user.is_administerator() %}
+<a class="btn btn-danger" href="{{ url_for('main.admin_edit_profile',user_id=user.id) }}" role="button">Edit
+    Profile[Admin]</a>
+{% endif %}
 {% endblock %}

@@ -26,11 +26,11 @@ class RegisterForm(FlaskForm):
 
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
-            raise ValidationError('Username have been in use.')
+            raise ValidationError('Username has been in use.')
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email have existed.')
+            raise ValidationError('Email has existed.')
 
 
 class ChangePasswordForm(FlaskForm):
