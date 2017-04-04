@@ -3,7 +3,7 @@ from . import db, login_manager
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app, request
+from flask import current_app
 from datetime import datetime
 from hashlib import md5
 
@@ -64,9 +64,6 @@ class User(UserMixin, db.Model):
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)  # super(类名, self)==基类引用
-        if self.avatar_hash is None:
-            self.avatar_hash = md5(self.email.encode('utf-8')).hexdigest()
-            db.session.add(self)
         if self.role is None:
             if self.email == current_app.config['MAIL_ADMIN']:
                 self.role = Role.query.filter_by(name='Administrator').first()
@@ -119,6 +116,9 @@ class User(UserMixin, db.Model):
         db.session.add(self)
 
     def make_gravatar_url(self, size=80, kind='retro'):
+        if self.avatar_hash is None:
+            self.avatar_hash = md5(self.email.encode('utf-8')).hexdigest()
+            db.session.add(self)
         url = 'http://www.gravatar.com/avatar'
         return '%s/%s?s=%s&d=%s' % (url, self.avatar_hash, size, kind)
 

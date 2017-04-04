@@ -1,9 +1,11 @@
 .image-thumbnail{
     float:left;
+    margin-bottom:20px;
 }
 
 .profile-header {
     float:left;
+    margin-left:60px;
 }
 
 .clear-float{
