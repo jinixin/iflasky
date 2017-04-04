@@ -1,13 +1,27 @@
 .image-thumbnail{
-    float:left;
-    margin-bottom:20px;
+    float: left;
+    margin-bottom: 20px;
 }
 
 .profile-header {
-    float:left;
-    margin-left:60px;
+    float: left;
+    margin-left: 60px;
+}
+
+.post-time{
+    float: right;
+    font-size: 15px;
+    color: gray;
+}
+
+.post-title{
+    margin-bottom: 8px;
+}
+
+.post-bottom{
+    margin-bottom: 10px;
 }
 
 .clear-float{
-    clear:both;
+    clear: both;
 }

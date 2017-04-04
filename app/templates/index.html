@@ -6,6 +6,7 @@
     <h3>
         {% if current_user.is_authenticated %}
         Click&nbsp;<a href="{{ url_for('auth.change_password') }}">here</a>&nbsp;to change your password<br/><br/>
+        Click <a href="{{ url_for('main.write_article') }}">here</a> to write article<br/><br/>
         {% endif %}
         Click <a href="{{ url_for('main.check_permit') }}">here</a> to check permission<br/>
     </h3>

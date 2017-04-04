@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, BooleanField
+from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField
 from wtforms import ValidationError
 from wtforms.validators import Length, DataRequired, Email, Regexp
 from ..models import Role, User
@@ -35,3 +35,9 @@ class AdminEditProfileForm(FlaskForm):
     def validate_username(self, field):
         if self.user.username != field.data and User.query.filter_by(username=field.data).first():
             raise ValidationError('Username has been in use.')
+
+
+class EditPostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(), Length(1, 64)])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Publish')

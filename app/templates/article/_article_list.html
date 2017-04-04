@@ -1,0 +1,22 @@
+<ul class="list-group">
+    {% for post in posts %}
+    <li class="list-group-item">
+        <div class="media">
+            <div class="media-left post-bottom">
+                <a href="{{ url_for('main.user_profile',username=post.author.username) }}">
+                    <img class="media-object" src="{{ post.author.make_gravatar_url(90) }}" alt="headImage">
+                    <p class="text-center">{{ post.author.username }}</p>
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading post-title">
+                    {{ post.title }}
+                    <span class="post-time">{{ moment(post.timestamp).fromNow(refresh=True) }}</span>
+                </h4>
+                <div class="clear-float"></div>
+                {{ post.content }}
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>

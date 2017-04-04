@@ -2,9 +2,9 @@
 from flask import render_template as rt, flash, redirect, url_for
 from . import main
 from ..decorators import require_permit, require_admin_permit
-from ..models import Permit, User
+from ..models import Permit, Post
 from flask_login import login_required, current_user
-from .forms import EditProfileForm, AdminEditProfileForm
+from .forms import *
 from .. import db
 from hashlib import md5
 
@@ -24,7 +24,8 @@ def check_permit():
 @main.route('/user/<username>')
 def user_profile(username):
     user = User.query.filter_by(username=username).first_or_404()
-    return rt('user/profile.html', user=user)
+    posts = user.post_list.order_by(Post.timestamp).all()
+    return rt('user/profile.html', user=user, posts=posts)
 
 
 @main.route('/user/editProfile', methods=['GET', 'POST'])
@@ -70,3 +71,21 @@ def admin_edit_profile(user_id):
     form.location.data = user.location
     form.about_me.data = user.about_me
     return rt('user/edit_profile.html', form=form)
+
+
+@main.route('/article/edit', methods=['GET', 'POST'])
+@login_required
+def write_article():
+    form = EditPostForm()
+    if form.validate_on_submit():
+        post = Post(title=form.title.data, content=form.content.data, author=current_user._get_current_object())
+        db.session.add(post)
+        flash('Article publish successfully.')
+        return redirect(url_for('main.user_profile', username=current_user.username))
+    return rt('article/edit_post.html', form=form)
+
+
+@main.route('/article/showList')
+def show_article_list():
+    posts = Post.query.order_by(Post.timestamp).all()
+    return rt('article/show_list.html', posts=posts)

@@ -11,11 +11,26 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 04/04/2017 11:32:43 AM
+ Date: 04/04/2017 23:55:57 PM
 */
 
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+--  Table structure for `posts`
+-- ----------------------------
+DROP TABLE IF EXISTS `posts`;
+CREATE TABLE `posts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+  `content` text COLLATE utf8_bin,
+  `timestamp` datetime DEFAULT NULL,
+  `author_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `author_id` (`author_id`),
+  CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 --  Table structure for `roles`
@@ -46,7 +61,7 @@ CREATE TABLE `users` (
   `location` varchar(64) DEFAULT NULL,
   `member_since` datetime DEFAULT NULL,
   `name` varchar(64) DEFAULT NULL,
-  `avatar_hash` varchar(64) DEFAULT NULL,
+  `avatar_hash` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_users_username` (`username`),
   UNIQUE KEY `ix_users_email` (`email`),
