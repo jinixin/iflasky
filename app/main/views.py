@@ -1,12 +1,11 @@
 # coding=utf-8
-from flask import render_template as rt, flash, redirect, url_for
+from flask import render_template as rt, flash, redirect, url_for, request
 from . import main
 from ..decorators import require_permit, require_admin_permit
 from ..models import Permit, Post
 from flask_login import login_required, current_user
 from .forms import *
 from .. import db
-from hashlib import md5
 
 
 @main.route('/')
@@ -23,9 +22,11 @@ def check_permit():
 
 @main.route('/user/<username>')
 def user_profile(username):
+    page_now = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
-    posts = user.post_list.order_by(Post.timestamp).all()
-    return rt('user/profile.html', user=user, posts=posts)
+    pagination = user.post_list.order_by(Post.timestamp.desc()).paginate(page_now, per_page=15, error_out=True)
+    posts = pagination.items
+    return rt('user/profile.html', user=user, posts=posts, pagination=pagination)
 
 
 @main.route('/user/editProfile', methods=['GET', 'POST'])
@@ -87,5 +88,7 @@ def write_article():
 
 @main.route('/article/showList')
 def show_article_list():
-    posts = Post.query.order_by(Post.timestamp).all()
-    return rt('article/show_list.html', posts=posts)
+    page_now = request.args.get('page', 1, type=int)
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(page_now, per_page=20, error_out=True)
+    posts = pagination.items
+    return rt('article/show_list.html', posts=posts, pagination=pagination)

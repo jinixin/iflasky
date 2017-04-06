@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% import "_pagination.html" as page_widget %}
+
 {% block page_content %}
 <div class="page-header">
     <img src="{{ user.make_gravatar_url(256) }}" alt="headImage" class="img-rounded img-responsive image-thumbnail">
@@ -41,5 +43,10 @@
     <div class="clear-float"></div>
 </div>
 <h3>Posts by {{ user.username }}</h3>
-{% include "article/_article_list.html" %}
+<div>
+    {% include "article/_article_list.html" %}
+    {% if pagination %}
+    {{ page_widget.pagination_widget(pagination, 'main.user_profile', username=user.username) }}
+    {% endif %}
+</div>
 {% endblock %}

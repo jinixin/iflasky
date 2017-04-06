@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 
+{% import "_pagination.html" as page_widget %}
+
 {% block page_content %}
 <div class="page-header">
     <h1>Article List</h1>
 </div>
 <div>
     {% include "article/_article_list.html" %}
+    {% if pagination %}
+    {{ page_widget.pagination_widget(pagination, 'main.show_article_list') }}
+    {% endif %}
 </div>
 {% endblock %}

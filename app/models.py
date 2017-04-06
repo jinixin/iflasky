@@ -60,7 +60,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    post_list = db.relationship('Post', backref='author', lazy='dynamic')
+    post_list = db.relationship('Post', backref='author', lazy='dynamic')  # lazy使user.post_list不会马上返回结果
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)  # super(类名, self)==基类引用
@@ -122,10 +122,39 @@ class User(UserMixin, db.Model):
         url = 'http://www.gravatar.com/avatar'
         return '%s/%s?s=%s&d=%s' % (url, self.avatar_hash, size, kind)
 
+    @classmethod
+    def fake_data(cls, count=100):
+        from random import seed
+        import forgery_py
+
+        seed()
+        for i in range(count):
+            user = User(email=forgery_py.internet.email_address(),
+                        username=forgery_py.internet.user_name(True),
+                        name=forgery_py.name.full_name(),
+                        password='123456',
+                        confirmed=True,
+                        location=forgery_py.address.city(),
+                        about_me=forgery_py.lorem_ipsum.sentences(),
+                        member_since=forgery_py.date.date(True))
+            db.session.add(user)
+            try:
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
+
 
 class AnonymousUser(AnonymousUserMixin):
     def check_permit(self, permit):
         return False
+
+
+login_manager.anonymous_user = AnonymousUser
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 class Post(db.Model):
@@ -136,10 +165,20 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    @classmethod
+    def fake_data(cls, count=200):
+        from random import seed, randint
+        import forgery_py
 
-login_manager.anonymous_user = AnonymousUser
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+        seed()
+        user_count = User.query.count()
+        for i in range(count):
+            author = User.query.get(randint(0, user_count - 1))
+            if author is None:
+                continue
+            post = Post(title=forgery_py.lorem_ipsum.word(),
+                        content=forgery_py.lorem_ipsum.paragraph(),
+                        timestamp=forgery_py.date.date(True),
+                        author=author)
+            db.session.add(post)
+            db.session.commit()
