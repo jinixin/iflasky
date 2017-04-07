@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 04/04/2017 23:55:57 PM
+ Date: 04/07/2017 21:15:38 PM
 */
 
 SET NAMES utf8;
@@ -27,6 +27,7 @@ CREATE TABLE `posts` (
   `content` text COLLATE utf8_bin,
   `timestamp` datetime DEFAULT NULL,
   `author_id` int(11) DEFAULT NULL,
+  `content_html` text COLLATE utf8_bin,
   PRIMARY KEY (`id`),
   KEY `author_id` (`author_id`),
   CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`)
