@@ -6,6 +6,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 from datetime import datetime
 from hashlib import md5
+from markdown import markdown
+from bleach import linkify, clean as bhclean
 
 
 class Permit(object):
@@ -162,10 +164,18 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
     content = db.Column(db.Text)
+    content_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    @classmethod
+    @staticmethod
+    def content_change(target, content, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                      'h1', 'h2', 'h3', 'h4', 'h5' 'p', 'img', 'hr', 'p']
+        allow_attributes = ['href', 'src']
+        target.content_html = linkify(
+            bhclean(markdown(content, output_format='html'), tags=allow_tags, attributes=allow_attributes, strip=False))
+
     def fake_data(cls, count=200):
         from random import seed, randint
         import forgery_py
@@ -182,3 +192,6 @@ class Post(db.Model):
                         author=author)
             db.session.add(post)
             db.session.commit()
+
+
+db.event.listen(Post.content, 'set', Post.content_change)

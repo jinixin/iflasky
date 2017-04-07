@@ -1,3 +1,7 @@
+.clear-float{
+    clear: both;
+}
+
 .image-thumbnail{
     float: left;
     margin-bottom: 20px;
@@ -22,6 +26,6 @@
     margin-bottom: 10px;
 }
 
-.clear-float{
-    clear: both;
+.page-bottom-left{
+    margin-bottom:30px;
 }

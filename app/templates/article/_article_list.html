@@ -14,7 +14,11 @@
                     <span class="post-time">{{ moment(post.timestamp).fromNow(refresh=True) }}</span>
                 </h4>
                 <div class="clear-float"></div>
+                {% if post.content_html %}
+                {{ post.content_html | safe }}
+                {% else %}
                 {{ post.content }}
+                {% endif %}
             </div>
         </div>
     </li>
