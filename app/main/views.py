@@ -1,5 +1,5 @@
 # coding=utf-8
-from flask import render_template as rt, flash, redirect, url_for, request
+from flask import render_template as rt, flash, redirect, url_for, request, abort
 from . import main
 from ..decorators import require_permit, require_admin_permit
 from ..models import Permit, Post
@@ -92,3 +92,27 @@ def show_article_list():
     pagination = Post.query.order_by(Post.timestamp.desc()).paginate(page_now, per_page=20, error_out=True)
     posts = pagination.items
     return rt('article/show_list.html', posts=posts, pagination=pagination)
+
+
+@main.route('/article/<int:article_id>')
+def show_article(article_id):
+    post = Post.query.get_or_404(article_id)
+    return rt('article/post.html', post=post)
+
+
+@main.route('/article/edit/<int:article_id>', methods=['GET', 'POST'])
+@login_required
+def rewrite_article(article_id):
+    post = Post.query.get_or_404(article_id)
+    if current_user != post.author and not current_user.is_administrator():
+        abort(403)
+    form = EditPostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.add(post)
+        flash('Article changed successfully.')
+        return redirect(url_for('main.show_article', article_id=post.id))
+    form.title.data = post.title
+    form.content.data = post.content
+    return rt('article/edit_post.html', form=form)

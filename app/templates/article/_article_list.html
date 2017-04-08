@@ -2,23 +2,40 @@
     {% for post in posts %}
     <li class="list-group-item">
         <div class="media">
-            <div class="media-left post-bottom">
-                <a href="{{ url_for('main.user_profile',username=post.author.username) }}">
+            <div class="media-left post-list-bottom">
+                <a href="{{ url_for('main.user_profile', username=post.author.username) }}">
                     <img class="media-object" src="{{ post.author.make_gravatar_url(90) }}" alt="headImage">
                     <p class="text-center">{{ post.author.username }}</p>
                 </a>
             </div>
             <div class="media-body">
-                <h4 class="media-heading post-title">
-                    {{ post.title }}
-                    <span class="post-time">{{ moment(post.timestamp).fromNow(refresh=True) }}</span>
+                <h4 class="media-heading post-list-title">
+                    <a href="{{ url_for('main.show_article', article_id=post.id) }}">{{ post.title }}</a>
+                    <span class="post-list-time">{{ moment(post.timestamp).fromNow(refresh=True) }}</span>
                 </h4>
-                <div class="clear-float"></div>
-                {% if post.content_html %}
-                {{ post.content_html | safe }}
-                {% else %}
-                {{ post.content }}
-                {% endif %}
+                <div class="clearfix"></div>
+                <div class="post-list-content">
+                    {% if post.content_html %}
+                    {{ post.content_html | safe }}
+                    {% else %}
+                    {{ post.content }}
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="post-list-label">
+                        {% if current_user == post.author %}
+                        <a href="{{ url_for('main.rewrite_article',article_id=post.id) }}">
+                            <span class="label label-primary">Edit</span>
+                        </a>
+                        {% endif %}
+                        {% if current_user.is_administrator() %}
+                        <a href="{{ url_for('main.rewrite_article',article_id=post.id) }}">
+                            <span class="label label-danger">Edit [Admin]</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
             </div>
         </div>
     </li>

@@ -35,7 +35,7 @@
         {% if current_user == user %}
         <a class="btn btn-primary" href="{{ url_for('main.edit_profile') }}" role="button">Edit Profile</a>
         {% endif %}
-        {% if current_user.is_authenticated and current_user.is_administerator() %}
+        {% if current_user.is_administrator() %}
         <a class="btn btn-danger" href="{{ url_for('main.admin_edit_profile',user_id=user.id) }}" role="button">Edit
             Profile[Admin]</a>
         {% endif %}

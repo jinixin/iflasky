@@ -12,20 +12,36 @@
     margin-left: 60px;
 }
 
-.post-time{
+.post-list-time{
     float: right;
     font-size: 15px;
     color: gray;
 }
 
-.post-title{
+.post-list-title{
     margin-bottom: 8px;
 }
 
-.post-bottom{
+.post-list-bottom{
     margin-bottom: 10px;
 }
 
+.post-list-content{
+    min-height: 60px;
+}
+
+.post-list-label{
+    float: right;
+}
+
 .page-bottom-left{
-    margin-bottom:30px;
+    margin-bottom: 30px;
+}
+
+.post-title{
+    float: left;
+}
+
+.post-info{
+    float: right;
 }

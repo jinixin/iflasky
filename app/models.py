@@ -110,7 +110,7 @@ class User(UserMixin, db.Model):
     def check_permit(self, permit):
         return self.role is not None and self.role.permit & permit == permit
 
-    def is_administerator(self):
+    def is_administrator(self):
         return self.check_permit(Permit.admin)
 
     def update_last_seen(self):
@@ -148,6 +148,9 @@ class User(UserMixin, db.Model):
 
 class AnonymousUser(AnonymousUserMixin):
     def check_permit(self, permit):
+        return False
+
+    def is_administrator(self):
         return False
 
 
