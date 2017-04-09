@@ -36,8 +36,9 @@
         <a class="btn btn-primary" href="{{ url_for('main.edit_profile') }}" role="button">Edit Profile</a>
         {% endif %}
         {% if current_user.is_administrator() %}
-        <a class="btn btn-danger" href="{{ url_for('main.admin_edit_profile',user_id=user.id) }}" role="button">Edit
-            Profile[Admin]</a>
+        <a class="btn btn-danger" href="{{ url_for('main.admin_edit_profile',user_id=user.id) }}" role="button">
+            Edit Profile[Admin]
+        </a>
         {% endif %}
         {% if current_user.is_authenticated and current_user!=user %}
         {% if current_user.is_following(user) %}
@@ -51,10 +52,14 @@
         {% endif %}
     </div>
     <div class="profile-header-plug">
-        <a href="#">Followers: <span class="badge">{{ user.idol_list.count() }}</span></a>,&nbsp;
-        <a href="#">Following: <span class="badge">{{ user.fans_list.count() }}</span></a>
+        <a href="{{ url_for('main.show_idols', username=user.username) }}">
+            Idols: <span class="badge">{{ user.idol_list.count() }}</span>
+        </a>,&nbsp;
+        <a href="{{ url_for('main.show_fans', username=user.username) }}">
+            Fans: <span class="badge">{{ user.fans_list.count() }}</span>
+        </a>
     </div>
-    <div class="clear-float"></div>
+    <div class="clearfix"></div>
 </div>
 <h3>Posts by {{ user.username }}</h3>
 <div>

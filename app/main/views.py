@@ -2,7 +2,7 @@
 from flask import render_template as rt, flash, redirect, url_for, request, abort
 from . import main
 from ..decorators import require_permit, require_admin_permit
-from ..models import Permit, Post
+from ..models import Permit, Post, Follow
 from flask_login import login_required, current_user
 from .forms import *
 from .. import db
@@ -150,3 +150,30 @@ def unfollow(username):
         current_user.unfollow(user)
         flash('You have unfollowed %s successfully.' % username)
         return redirect(url_for('main.user_profile', username=username))
+
+
+def show_common(username, flag):
+    user = User.query.filter_by(username=username).first_or_404()
+    page = request.args.get('page', 1, type=int)
+    if flag == 1:
+        pagination = user.idol_list.order_by(Follow.timestamp).paginate(page, per_page=24, error_out=True)
+        relation = [{'user': item.idol, 'timestamp': item.timestamp} for item in pagination.items]
+        endpoint = 'main.show_idols'
+        title = 'Idols of %s' % username
+    else:
+        pagination = user.fans_list.order_by(Follow.timestamp).paginate(page, per_page=24, error_out=True)
+        relation = [{'user': item.fans, 'timestamp': item.timestamp} for item in pagination.items]
+        endpoint = 'main.show_fans'
+        title = 'Fans of %s' % username
+    return rt('user/relation.html', relation=relation, pagination=pagination, endpoint=endpoint, title=title,
+              username=username)
+
+
+@main.route('/following/show/<username>')
+def show_idols(username):
+    return show_common(username, 1)
+
+
+@main.route('/followed/show/<username>')
+def show_fans(username):
+    return show_common(username, 2)

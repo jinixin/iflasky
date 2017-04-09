@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% import "_pagination.html" as page_widget %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+</div>
+<div class="row relation">
+    {% for item in relation: %}
+    <div class="col-sm-3 col-md-2">
+        <div class="thumbnail">
+            <a href="{{ url_for('main.user_profile', username=item['user'].username) }}">
+                <img src="{{ item['user'].make_gravatar_url(150) }}" alt="headImage">
+            </a>
+            <div class="caption">
+                <b>{{ item['user'].username }}</b><br/>
+                <span>{{ item['timestamp'] }}</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% if pagination %}
+{{ page_widget.pagination_widget(pagination, endpoint, username=username) }}
+{% endif %}
+{% endblock %}

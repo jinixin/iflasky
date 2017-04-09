@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 04/09/2017 18:14:08 PM
+ Date: 04/09/2017 23:18:12 PM
 */
 
 SET NAMES utf8;
@@ -39,7 +39,7 @@ CREATE TABLE `posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(64) COLLATE utf8_bin DEFAULT NULL,
   `content` text COLLATE utf8_bin,
-  `timestamp` datetime DEFAULT NULL,
+  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
   `author_id` int(11) DEFAULT NULL,
   `content_html` text COLLATE utf8_bin,
   PRIMARY KEY (`id`),
@@ -72,9 +72,9 @@ CREATE TABLE `users` (
   `password_hash` varchar(128) DEFAULT NULL,
   `confirmed` tinyint(1) DEFAULT NULL,
   `about_me` varchar(64) DEFAULT NULL,
-  `last_seen` datetime DEFAULT NULL,
+  `last_seen` datetime DEFAULT CURRENT_TIMESTAMP,
   `location` varchar(64) DEFAULT NULL,
-  `member_since` datetime DEFAULT NULL,
+  `member_since` datetime DEFAULT CURRENT_TIMESTAMP,
   `name` varchar(64) DEFAULT NULL,
   `avatar_hash` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),

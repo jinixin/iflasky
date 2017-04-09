@@ -9,3 +9,4 @@ Study "Flask Web Development", code cases for some chapters
 * 放宽Markdown标签和属性的限制
 * 不提倡用户可以更换邮箱，仅仅只能通过管理员才能更换
 * 增加文章标题
+* 重新布局关注者和被关注者页面
