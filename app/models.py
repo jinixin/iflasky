@@ -48,6 +48,13 @@ class Role(db.Model):
         db.session.commit()
 
 
+class Follow(db.Model):
+    __tablename__ = 'follows'
+    fans_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    idol_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -58,11 +65,15 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     location = db.Column(db.String(64))
     about_me = db.Column(db.String(64))
-    member_since = db.Column(db.DateTime(), default=datetime.utcnow)
-    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    member_since = db.Column(db.DateTime, default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     post_list = db.relationship('Post', backref='author', lazy='dynamic')  # lazy使user.post_list不会马上返回结果
+    idol_list = db.relationship('Follow', foreign_keys=[Follow.fans_id], backref=db.backref('fans', lazy='joined'),
+                                lazy='dynamic', cascade='all, delete-orphan')
+    fans_list = db.relationship('Follow', foreign_keys=[Follow.idol_id], backref=db.backref('idol', lazy='joined'),
+                                lazy='dynamic', cascade='all, delete-orphan')
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)  # super(类名, self)==基类引用
@@ -124,6 +135,21 @@ class User(UserMixin, db.Model):
         url = 'http://www.gravatar.com/avatar'
         return '%s/%s?s=%s&d=%s' % (url, self.avatar_hash, size, kind)
 
+    def is_following(self, user):  # 是否关注user
+        return self.idol_list.filter_by(idol_id=user.id).first() is not None
+
+    def is_followed_by(self, user):  # 是否被user关注，感觉该方法功能上与is_following重复
+        return self.fans_list.filter_by(fans_id=user.id).first() is not None
+
+    def follow(self, user):
+        if not self.is_following(user):
+            db.session.add(Follow(fans=self, idol=user))
+
+    def unfollow(self, user):
+        record = self.idol_list.filter_by(idol_id=user.id).first()
+        if record is not None:
+            db.session.delete(record)
+
     @classmethod
     def fake_data(cls, count=100):
         from random import seed
@@ -168,7 +194,7 @@ class Post(db.Model):
     title = db.Column(db.String(64))
     content = db.Column(db.Text)
     content_html = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     @staticmethod

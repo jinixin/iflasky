@@ -116,3 +116,37 @@ def rewrite_article(article_id):
     form.title.data = post.title
     form.content.data = post.content
     return rt('article/edit_post.html', form=form)
+
+
+@main.route('/follow/<username>')
+@login_required
+@require_permit(Permit.follow)
+def follow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('The user is not existed.')
+        return redirect(url_for('main.index'))
+    elif current_user.is_following(user):
+        flash('The user has already been following.')
+        return redirect(url_for('main.user_profile', username=username))
+    else:
+        current_user.follow(user)
+        flash('You have followed %s successfully.' % username)
+        return redirect(url_for('main.user_profile', username=username))
+
+
+@main.route('/unfollow/<username>')
+@login_required
+@require_permit(Permit.follow)
+def unfollow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('The user is not existed.')
+        return redirect(url_for('main.index'))
+    elif not current_user.is_following(user):
+        flash('You have not followed %s.' % username)
+        return redirect(url_for('main.user_profile', username=username))
+    else:
+        current_user.unfollow(user)
+        flash('You have unfollowed %s successfully.' % username)
+        return redirect(url_for('main.user_profile', username=username))

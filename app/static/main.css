@@ -7,9 +7,15 @@
     margin-bottom: 20px;
 }
 
-.profile-header {
+.profile-header-main {
     float: left;
     margin-left: 60px;
+}
+
+.profile-header-plug{
+    float: right;
+    margin-top: 65px;
+    margin-right: 120px;
 }
 
 .post-list-time{

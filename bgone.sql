@@ -11,11 +11,25 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 04/07/2017 21:15:38 PM
+ Date: 04/09/2017 18:14:08 PM
 */
 
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+--  Table structure for `follows`
+-- ----------------------------
+DROP TABLE IF EXISTS `follows`;
+CREATE TABLE `follows` (
+  `fans_id` int(11) NOT NULL,
+  `idol_id` int(11) NOT NULL,
+  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`fans_id`,`idol_id`),
+  KEY `idol_id` (`idol_id`),
+  CONSTRAINT `follows_ibfk_1` FOREIGN KEY (`fans_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `follows_ibfk_2` FOREIGN KEY (`idol_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 --  Table structure for `posts`
