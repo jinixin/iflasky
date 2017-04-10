@@ -1,5 +1,5 @@
 # coding=utf-8
-from flask import render_template as rt, flash, redirect, url_for, request, abort
+from flask import render_template as rt, flash, redirect, url_for, request, abort, make_response
 from . import main
 from ..decorators import require_permit, require_admin_permit
 from ..models import Permit, Post, Follow
@@ -88,10 +88,29 @@ def write_article():
 
 @main.route('/article/showList')
 def show_article_list():
+    show_idol_cookie = request.cookies.get('show_idol_cookie', '0') if current_user.is_authenticated else '0'
+    if show_idol_cookie == '1':
+        query = current_user.show_idols_article_sql()
+    else:
+        query = Post.query
     page_now = request.args.get('page', 1, type=int)
-    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(page_now, per_page=20, error_out=True)
+    pagination = query.order_by(Post.timestamp.desc()).paginate(page_now, per_page=20, error_out=True)
     posts = pagination.items
-    return rt('article/show_list.html', posts=posts, pagination=pagination)
+    return rt('article/show_list.html', posts=posts, pagination=pagination, show_idol_cookie=show_idol_cookie)
+
+
+@main.route('/article/showAllList')
+def show_all_article_list():
+    response = make_response(redirect(url_for('main.show_article_list')))
+    response.set_cookie('show_idol_cookie', '0', max_age=7 * 24 * 3600)
+    return response
+
+
+@main.route('/article/showIdolList')
+def show_idol_article_list():
+    response = make_response(redirect(url_for('main.show_article_list')))
+    response.set_cookie('show_idol_cookie', '1', max_age=7 * 24 * 3600)
+    return response
 
 
 @main.route('/article/<int:article_id>')

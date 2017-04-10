@@ -8,6 +8,7 @@ from datetime import datetime
 from hashlib import md5
 from markdown import markdown
 from bleach import linkify, clean as bhclean
+from sqlalchemy import or_
 
 
 class Permit(object):
@@ -55,6 +56,44 @@ class Follow(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64))
+    content = db.Column(db.Text)
+    content_html = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    @staticmethod
+    def content_change(target, content, oldvalue, initiator):
+        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                      'h1', 'h2', 'h3', 'h4', 'h5' 'p', 'img', 'hr', 'p']
+        allow_attributes = ['href', 'src']
+        target.content_html = linkify(
+            bhclean(markdown(content, output_format='html'), tags=allow_tags, attributes=allow_attributes, strip=False))
+
+    def fake_data(cls, count=200):
+        from random import seed, randint
+        import forgery_py
+
+        seed()
+        user_count = User.query.count()
+        for i in range(count):
+            author = User.query.get(randint(0, user_count - 1))
+            if author is None:
+                continue
+            post = Post(title=forgery_py.lorem_ipsum.word(),
+                        content=forgery_py.lorem_ipsum.paragraph(),
+                        timestamp=forgery_py.date.date(True),
+                        author=author)
+            db.session.add(post)
+            db.session.commit()
+
+
+db.event.listen(Post.content, 'set', Post.content_change)
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -86,7 +125,7 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-    @property
+    @property  # 将该方法定义为属性，调用时无需加()
     def password(self):
         raise AttributeError('password not readable')
 
@@ -150,6 +189,10 @@ class User(UserMixin, db.Model):
         if record is not None:
             db.session.delete(record)
 
+    def show_idols_article_sql(self):
+        return Post.query.join(Follow, Follow.idol_id == Post.author_id).filter(
+            or_(self.id == Follow.fans_id, self.id == Follow.idol_id))  # 或关系
+
     @classmethod
     def fake_data(cls, count=100):
         from random import seed
@@ -186,41 +229,3 @@ login_manager.anonymous_user = AnonymousUser
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-class Post(db.Model):
-    __tablename__ = 'posts'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64))
-    content = db.Column(db.Text)
-    content_html = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
-    @staticmethod
-    def content_change(target, content, oldvalue, initiator):
-        allow_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                      'h1', 'h2', 'h3', 'h4', 'h5' 'p', 'img', 'hr', 'p']
-        allow_attributes = ['href', 'src']
-        target.content_html = linkify(
-            bhclean(markdown(content, output_format='html'), tags=allow_tags, attributes=allow_attributes, strip=False))
-
-    def fake_data(cls, count=200):
-        from random import seed, randint
-        import forgery_py
-
-        seed()
-        user_count = User.query.count()
-        for i in range(count):
-            author = User.query.get(randint(0, user_count - 1))
-            if author is None:
-                continue
-            post = Post(title=forgery_py.lorem_ipsum.word(),
-                        content=forgery_py.lorem_ipsum.paragraph(),
-                        timestamp=forgery_py.date.date(True),
-                        author=author)
-            db.session.add(post)
-            db.session.commit()
-
-
-db.event.listen(Post.content, 'set', Post.content_change)
