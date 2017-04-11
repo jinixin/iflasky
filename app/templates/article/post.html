@@ -18,7 +18,7 @@
 <hr />
 <h2 id="comment">Comments</h2><br/>
 <div class="comment-list">
-    {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated and current_user.check_permit(Permit.comment) %}
     <div class="comment-form">
         {% import "bootstrap/wtf.html" as wtf %}
         {{ wtf.quick_form(form) }}

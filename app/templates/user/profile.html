@@ -40,7 +40,7 @@
             Edit Profile[Admin]
         </a>
         {% endif %}
-        {% if current_user.is_authenticated and current_user!=user %}
+        {% if current_user.is_authenticated and current_user!=user and current_user.check_permit(Permit.follow) %}
         {% if current_user.is_following(user) %}
         <a href="{{ url_for('main.unfollow',username=user.username) }}" class="btn btn-warning">UnFollow</a>
         {% else %}

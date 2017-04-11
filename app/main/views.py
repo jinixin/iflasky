@@ -75,6 +75,7 @@ def admin_edit_profile(user_id):
 
 
 @main.route('/article/edit', methods=['GET', 'POST'])
+@require_permit(Permit.write_article)
 @login_required
 def write_article():
     form = EditPostForm()
@@ -132,6 +133,7 @@ def show_article(article_id):
 
 
 @main.route('/article/edit/<int:article_id>', methods=['GET', 'POST'])
+@require_permit(Permit.write_article)
 @login_required
 def rewrite_article(article_id):
     post = Post.query.get_or_404(article_id)
