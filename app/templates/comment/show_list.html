@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% import "_pagination.html" as page_widget %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Manage Comment</h1>
+</div>
+<div>
+    {% if current_user.is_authenticated and current_user.check_permit(Permit.manage_comment) %}
+    {% set MANAGE = True %}
+    {% include "comment/_comment_list.html" %}
+    {% if pagination %}
+    {{ page_widget.pagination_widget(pagination, 'main.manage_comment') }}
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

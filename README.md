@@ -11,3 +11,4 @@ Study "Flask Web Development", code cases for some chapters
 * 增加文章标题
 * 重新布局关注者和被关注者页面
 * 对显示关注者和自己文章的标签页，通过添加查询来完成，避免大量不必要改动（如：自己关注自己）。同时也发现，可能必须指定“pagination.total = query.count()”，否则该分页会出现错误，目前不清楚是否为bug
+* 管理评论部分，将修改评论状态的两个函数合并为一个

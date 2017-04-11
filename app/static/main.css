@@ -73,3 +73,7 @@
 .comment-form{
     margin-bottom: 50px;
 }
+
+.comment-list-button{
+    float: right;
+}

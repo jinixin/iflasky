@@ -25,8 +25,7 @@ def user_profile(username):
     page_now = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
     pagination = user.post_list.order_by(Post.timestamp.desc()).paginate(page_now, per_page=15, error_out=True)
-    posts = pagination.items
-    return rt('user/profile.html', user=user, posts=posts, pagination=pagination)
+    return rt('user/profile.html', user=user, posts=pagination.items, pagination=pagination)
 
 
 @main.route('/user/editProfile', methods=['GET', 'POST'])
@@ -98,11 +97,10 @@ def show_article_list():
         endpoint = 'main.show_all_article_list'
     page_now = request.args.get('page', 1, type=int)
     pagination = query.order_by(Post.timestamp.desc()).paginate(page_now, per_page=20, error_out=True)
-    posts = pagination.items
     if show_idol_cookie == '1':
         pagination.total = query.count()  # 需告知实际查询量，否则show_idol_article_list分页只显示第一页，是否paginate出现bug?
-    return rt('article/show_list.html', posts=posts, pagination=pagination, show_idol_cookie=show_idol_cookie,
-              endpoint=endpoint)
+    return rt('article/show_list.html', posts=pagination.items, pagination=pagination,
+              show_idol_cookie=show_idol_cookie, endpoint=endpoint)
 
 
 @main.route('/article/showAllList')
@@ -210,3 +208,25 @@ def show_idols(username):
 @main.route('/followed/show/<username>')
 def show_fans(username):
     return show_common(username, 2)
+
+
+@main.route('/comment/showList')
+@login_required
+@require_permit(Permit.manage_comment)
+def manage_comment():
+    page = request.args.get('page', 1, type=int)
+    pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(page, per_page=30, error_out=True)
+    return rt('comment/show_list.html', comment_list=pagination.items, pagination=pagination)
+
+
+@main.route('/comment/<int:id>')
+@login_required
+@require_permit(Permit.manage_comment)
+def handle_comment(id):
+    comment = Comment.query.get_or_404(id)
+    if comment.closed:
+        comment.closed = False
+    else:
+        comment.closed = True
+    db.session.add(comment)
+    return redirect(url_for('main.manage_comment', page=request.args.get('page', 1, type=int)) + '#%s' % id)

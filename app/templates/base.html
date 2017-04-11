@@ -23,6 +23,9 @@
                 <li><a href="{{ url_for('main.show_article_list') }}">Article</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                {% if current_user.is_authenticated and current_user.check_permit(Permit.manage_comment) %}
+                <li><a href="{{ url_for('main.manage_comment') }}">Manage Comments</a></li>
+                {% endif %}
                 {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('auth.logout') }}"><span class="glyphicon glyphicon-user"></span> Sign Out</a>
                 </li>

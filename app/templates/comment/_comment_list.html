@@ -1,0 +1,46 @@
+<div class="list-group">
+    {% for comment in comment_list %}
+    <div class="list-group-item {% if current_user == comment.author %}list-group-item-info{% endif %}">
+        <div class="media" id="{{ comment.id }}">
+            <div class="media-left">
+                <a href="{{ url_for('main.user_profile', username=comment.author.username) }}">
+                    <img class="media-object" src="{{ comment.author.make_gravatar_url(60) }}" alt="headImage">
+                </a>
+            </div>
+            <div class="media-body">
+                <h5 class="media-heading comment-list-title">
+                    <a href="{{ url_for('main.user_profile', username=comment.author.username) }}">
+                        {{ comment.author.username }}
+                    </a>
+                    {% if MANAGE %}
+                    &nbsp;-&nbsp;
+                    <a href="{{ url_for('main.show_article', article_id=comment.post_id) }}">{{comment.post.title}}</a>
+                    {% endif %}
+                    <span class="comment-list-time">{{ moment(comment.timestamp).fromNow(refresh=True) }}</span>
+                </h5>
+                <div class="clearfix"></div>
+                <div class="comment-list-content">
+                    {% if comment.closed and not MANAGE %}
+                    <i>The comment has been closed by assistant.</i>
+                    {% else %}
+                    {{ comment.content }}
+                    {% endif %}
+                </div>
+                {% if MANAGE %}
+                <div>
+                    <div class="comment-list-button">
+                        {% if comment.closed %}
+                        <a class="btn btn-success btn-xs"
+                           href="{{ url_for('main.handle_comment',id=comment.id, page=pagination.page) }}">Opened</a>
+                        {% else %}
+                        <a class="btn btn-danger btn-xs"
+                           href="{{ url_for('main.handle_comment',id=comment.id, page=pagination.page) }}">Closed</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
