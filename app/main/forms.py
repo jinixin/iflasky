@@ -43,3 +43,8 @@ class EditPostForm(FlaskForm):
     # content = TextAreaField('Content', validators=[DataRequired()])
     content = PageDownField('Content', validators=[DataRequired()])
     submit = SubmitField('Publish')
+
+
+class EditCommentForm(FlaskForm):
+    content = TextAreaField('Enter your comment', validators=[DataRequired(), Length(1, 64)])
+    submit = SubmitField('Submit')

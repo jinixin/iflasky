@@ -14,5 +14,44 @@
     {% else %}
     {{ post.content }}
     {% endif %}
+</div><br/><br/>
+<hr />
+<h2 id="comment">Comments</h2><br/>
+<div class="comment-list">
+    {% if current_user.is_authenticated %}
+    <div class="comment-form">
+        {% import "bootstrap/wtf.html" as wtf %}
+        {{ wtf.quick_form(form) }}
+    </div>
+    {% endif %}
+    <div class="list-group">
+        {% for comment in comment_list %}
+            {% if current_user == comment.author %}
+            <div class="list-group-item list-group-item-info">
+            {% else %}
+            <div class="list-group-item">
+            {% endif %}
+            <div class="media">
+                <div class="media-left">
+                    <a href="{{ url_for('main.user_profile', username=comment.author.username) }}">
+                        <img class="media-object" src="{{ comment.author.make_gravatar_url(60) }}" alt="headImage">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h5 class="media-heading comment-list-title">
+                        <a href="{{ url_for('main.user_profile', username=comment.author.username) }}">
+                            {{ comment.author.username }}
+                        </a>
+                        <span class="comment-list-time">{{ moment(comment.timestamp).fromNow(refresh=True) }}</span>
+                    </h5>
+                    <div class="clearfix"></div>
+                    <div class="comment-list-content">
+                        {{ comment.content }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

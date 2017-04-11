@@ -64,6 +64,7 @@ class Post(db.Model):
     content_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    comment_list = db.relationship('Comment', backref='post', lazy='dynamic')
 
     @staticmethod
     def content_change(target, content, oldvalue, initiator):
@@ -113,6 +114,7 @@ class User(UserMixin, db.Model):
                                 lazy='dynamic', cascade='all, delete-orphan')
     fans_list = db.relationship('Follow', foreign_keys=[Follow.idol_id], backref=db.backref('idol', lazy='joined'),
                                 lazy='dynamic', cascade='all, delete-orphan')
+    comment_list = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)  # super(类名, self)==基类引用
@@ -229,3 +231,13 @@ login_manager.anonymous_user = AnonymousUser
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(64))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    closed = db.Column(db.Boolean, default=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))

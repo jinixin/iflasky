@@ -11,11 +11,29 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 04/09/2017 23:18:12 PM
+ Date: 04/11/2017 12:06:34 PM
 */
 
 SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+--  Table structure for `comments`
+-- ----------------------------
+DROP TABLE IF EXISTS `comments`;
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+  `timestamp` datetime DEFAULT NULL,
+  `closed` tinyint(1) DEFAULT NULL,
+  `post_id` int(11) DEFAULT NULL,
+  `author_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `author_id` (`author_id`),
+  KEY `post_id` (`post_id`),
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 --  Table structure for `follows`
@@ -24,7 +42,7 @@ DROP TABLE IF EXISTS `follows`;
 CREATE TABLE `follows` (
   `fans_id` int(11) NOT NULL,
   `idol_id` int(11) NOT NULL,
-  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`fans_id`,`idol_id`),
   KEY `idol_id` (`idol_id`),
   CONSTRAINT `follows_ibfk_1` FOREIGN KEY (`fans_id`) REFERENCES `users` (`id`),

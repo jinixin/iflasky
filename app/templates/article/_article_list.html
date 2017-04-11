@@ -33,6 +33,9 @@
                             <span class="label label-danger">Edit [Admin]</span>
                         </a>
                         {% endif %}
+                        <a href="{{ url_for('main.show_article',article_id=post.id) }}#comment">
+                            <span class="label label-warning">{{ post.comment_list.count() }} Comments</span>
+                        </a>
                     </div>
                     <div class="clearfix"></div>
                 </div>

@@ -2,7 +2,7 @@
 from flask import render_template as rt, flash, redirect, url_for, request, abort, make_response
 from . import main
 from ..decorators import require_permit, require_admin_permit
-from ..models import Permit, Post, Follow
+from ..models import Permit, Post, Follow, Comment
 from flask_login import login_required, current_user
 from .forms import *
 from .. import db
@@ -113,10 +113,17 @@ def show_idol_article_list():
     return response
 
 
-@main.route('/article/<int:article_id>')
+@main.route('/article/<int:article_id>', methods=['GET', 'POST'])
 def show_article(article_id):
     post = Post.query.get_or_404(article_id)
-    return rt('article/post.html', post=post)
+    form = EditCommentForm()
+    if form.validate_on_submit():
+        comment = Comment(content=form.content.data, author=current_user._get_current_object(), post=post)
+        db.session.add(comment)
+        flash('Comment publish successfully.')
+        return redirect(url_for('main.show_article', article_id=article_id) + '#comment')  # 跳转锚点
+    comment_list = Comment.query.filter_by(post_id=article_id).order_by(Comment.timestamp).all()
+    return rt('article/post.html', post=post, comment_list=comment_list, form=form)
 
 
 @main.route('/article/edit/<int:article_id>', methods=['GET', 'POST'])
