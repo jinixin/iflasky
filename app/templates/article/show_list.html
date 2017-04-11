@@ -22,7 +22,7 @@
     </ul>
     {% include "article/_article_list.html" %}
     {% if pagination %}
-    {{ page_widget.pagination_widget(pagination, 'main.show_article_list') }}
+    {{ page_widget.pagination_widget(pagination, endpoint) }}
     {% endif %}
 </div>
 {% endblock %}

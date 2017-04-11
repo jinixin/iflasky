@@ -193,7 +193,7 @@ class User(UserMixin, db.Model):
 
     def show_idols_article_sql(self):
         return Post.query.join(Follow, Follow.idol_id == Post.author_id).filter(
-            or_(self.id == Follow.fans_id, self.id == Follow.idol_id))  # 或关系
+            or_(self.id == Follow.fans_id, self.id == Post.author_id))  # 或关系
 
     @classmethod
     def fake_data(cls, count=100):

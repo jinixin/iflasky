@@ -91,24 +91,29 @@ def show_article_list():
     show_idol_cookie = request.cookies.get('show_idol_cookie', '0') if current_user.is_authenticated else '0'
     if show_idol_cookie == '1':
         query = current_user.show_idols_article_sql()
+        endpoint = 'main.show_idol_article_list'
     else:
         query = Post.query
+        endpoint = 'main.show_all_article_list'
     page_now = request.args.get('page', 1, type=int)
     pagination = query.order_by(Post.timestamp.desc()).paginate(page_now, per_page=20, error_out=True)
     posts = pagination.items
-    return rt('article/show_list.html', posts=posts, pagination=pagination, show_idol_cookie=show_idol_cookie)
+    if show_idol_cookie == '1':
+        pagination.total = query.count()  # 需告知实际查询量，否则show_idol_article_list分页只显示第一页，是否paginate出现bug?
+    return rt('article/show_list.html', posts=posts, pagination=pagination, show_idol_cookie=show_idol_cookie,
+              endpoint=endpoint)
 
 
 @main.route('/article/showAllList')
 def show_all_article_list():
-    response = make_response(redirect(url_for('main.show_article_list')))
+    response = make_response(redirect(url_for('main.show_article_list', page=request.args.get('page', 1, type=int))))
     response.set_cookie('show_idol_cookie', '0', max_age=7 * 24 * 3600)
     return response
 
 
 @main.route('/article/showIdolList')
 def show_idol_article_list():
-    response = make_response(redirect(url_for('main.show_article_list')))
+    response = make_response(redirect(url_for('main.show_article_list', page=request.args.get('page', 1, type=int))))
     response.set_cookie('show_idol_cookie', '1', max_age=7 * 24 * 3600)
     return response
 
