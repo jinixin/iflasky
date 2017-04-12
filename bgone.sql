@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 04/11/2017 12:06:34 PM
+ Date: 04/12/2017 12:32:27 PM
 */
 
 SET NAMES utf8;
@@ -23,7 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `content` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+  `content` varchar(256) COLLATE utf8_bin DEFAULT NULL,
   `timestamp` datetime DEFAULT NULL,
   `closed` tinyint(1) DEFAULT NULL,
   `post_id` int(11) DEFAULT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE `follows` (
 DROP TABLE IF EXISTS `posts`;
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(64) COLLATE utf8_bin DEFAULT NULL,
+  `title` varchar(48) COLLATE utf8_bin NOT NULL,
   `content` text COLLATE utf8_bin,
   `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
   `author_id` int(11) DEFAULT NULL,

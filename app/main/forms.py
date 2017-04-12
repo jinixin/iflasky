@@ -39,12 +39,12 @@ class AdminEditProfileForm(FlaskForm):
 
 
 class EditPostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired(), Length(1, 64)])
+    title = StringField('Title', validators=[DataRequired(), Length(1, 48)])
     # content = TextAreaField('Content', validators=[DataRequired()])
     content = PageDownField('Content', validators=[DataRequired()])
     submit = SubmitField('Publish')
 
 
 class EditCommentForm(FlaskForm):
-    content = TextAreaField('Enter your comment', validators=[DataRequired(), Length(1, 64)])
+    content = TextAreaField('Enter your comment', validators=[DataRequired(), Length(1, 256)])
     submit = SubmitField('Submit')

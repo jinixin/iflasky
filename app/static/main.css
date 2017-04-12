@@ -30,6 +30,8 @@
 
 .post-list-content{
     min-height: 60px;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 .post-list-label{
@@ -48,6 +50,11 @@
     float: right;
 }
 
+.post-content{
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
 .relation{
     margin-top: 50px;
 }
@@ -64,6 +71,8 @@
 
 .comment-list-content{
     min-height: 0px;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 .comment-list{

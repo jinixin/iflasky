@@ -59,7 +59,7 @@ class Follow(db.Model):
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64))
+    title = db.Column(db.String(48))
     content = db.Column(db.Text)
     content_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
@@ -236,7 +236,7 @@ def load_user(user_id):
 class Comment(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(64))
+    content = db.Column(db.String(256))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     closed = db.Column(db.Boolean, default=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
