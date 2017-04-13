@@ -40,6 +40,7 @@ class AdminEditProfileForm(FlaskForm):
 
 class EditPostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(1, 48)])
+    summary = TextAreaField('Summary', validators=[Length(0, 256)])
     # content = TextAreaField('Content', validators=[DataRequired()])
     content = PageDownField('Content', validators=[DataRequired()])
     submit = SubmitField('Publish')

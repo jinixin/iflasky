@@ -15,11 +15,7 @@
                 </h4>
                 <div class="clearfix"></div>
                 <div class="post-list-content">
-                    {% if post.content_html %}
-                    {{ post.content_html | safe }}
-                    {% else %}
-                    {{ post.content }}
-                    {% endif %}
+                    {{ post.summary }}
                 </div>
                 <div>
                     <div class="post-list-label">

@@ -79,7 +79,10 @@ def admin_edit_profile(user_id):
 def write_article():
     form = EditPostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author=current_user._get_current_object())
+        if form.summary.data.strip() == '':
+            form.summary.data = form.content.data[:200]
+        post = Post(title=form.title.data, content=form.content.data, summary=form.summary.data,
+                    author=current_user._get_current_object())
         db.session.add(post)
         flash('Article publish successfully.')
         return redirect(url_for('main.user_profile', username=current_user.username))
@@ -140,10 +143,14 @@ def rewrite_article(article_id):
     form = EditPostForm()
     if form.validate_on_submit():
         post.title = form.title.data
+        if form.summary.data.strip() == '':
+            form.summary.data = form.content.data[:200]
+        post.summary = form.summary.data
         post.content = form.content.data
         db.session.add(post)
         flash('Article changed successfully.')
         return redirect(url_for('main.show_article', article_id=post.id))
+    form.summary.data = post.summary
     form.title.data = post.title
     form.content.data = post.content
     return rt('article/edit_post.html', form=form)
