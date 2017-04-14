@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 04/13/2017 15:51:09 PM
+ Date: 04/14/2017 12:21:32 PM
 */
 
 SET NAMES utf8;
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `content` varchar(256) COLLATE utf8_bin DEFAULT NULL,
-  `timestamp` datetime DEFAULT NULL,
+  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `closed` tinyint(1) DEFAULT NULL,
   `post_id` int(11) DEFAULT NULL,
   `author_id` int(11) DEFAULT NULL,
@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS `follows`;
 CREATE TABLE `follows` (
   `fans_id` int(11) NOT NULL,
   `idol_id` int(11) NOT NULL,
-  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`fans_id`,`idol_id`),
   KEY `idol_id` (`idol_id`),
   CONSTRAINT `follows_ibfk_1` FOREIGN KEY (`fans_id`) REFERENCES `users` (`id`),
@@ -55,9 +55,9 @@ CREATE TABLE `follows` (
 DROP TABLE IF EXISTS `posts`;
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(48) COLLATE utf8_bin DEFAULT NULL,
+  `title` varchar(48) COLLATE utf8_bin NOT NULL,
   `content` text COLLATE utf8_bin,
-  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `author_id` int(11) DEFAULT NULL,
   `content_html` text COLLATE utf8_bin,
   `summary` varchar(256) COLLATE utf8_bin DEFAULT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE `posts` (
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) DEFAULT NULL,
+  `name` varchar(64) NOT NULL,
   `default` tinyint(1) DEFAULT NULL,
   `permit` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -87,18 +87,18 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(64) DEFAULT NULL,
   `role_id` int(11) DEFAULT NULL,
-  `email` varchar(64) DEFAULT NULL,
-  `password_hash` varchar(128) DEFAULT NULL,
+  `email` varchar(64) NOT NULL,
+  `password_hash` varchar(128) NOT NULL,
   `confirmed` tinyint(1) DEFAULT NULL,
   `about_me` varchar(64) DEFAULT NULL,
-  `last_seen` datetime DEFAULT CURRENT_TIMESTAMP,
+  `last_seen` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `location` varchar(64) DEFAULT NULL,
-  `member_since` datetime DEFAULT CURRENT_TIMESTAMP,
+  `member_since` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `name` varchar(64) DEFAULT NULL,
   `avatar_hash` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `ix_users_username` (`username`),
   UNIQUE KEY `ix_users_email` (`email`),
+  UNIQUE KEY `ix_users_username` (`username`),
   KEY `role_id` (`role_id`),
   CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

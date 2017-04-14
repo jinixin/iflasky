@@ -58,6 +58,8 @@
         <a href="{{ url_for('main.show_fans', username=user.username) }}">
             Fans: <span class="badge">{{ user.fans_list.count() }}</span>
         </a>
+        <br/><br/>
+        <i>{{ user.post_list.count() }} posts, {{ user.comment_list.count() }} comments</i>
     </div>
     <div class="clearfix"></div>
 </div>
