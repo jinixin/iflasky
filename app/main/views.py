@@ -13,13 +13,6 @@ def index():
     return rt('index.html')
 
 
-@main.route('/checkPermit')
-@require_permit(Permit.manage_comment)
-def check_permit():
-    flash('Meet the permission.')
-    return rt('index.html')
-
-
 @main.route('/user/<username>')
 def user_profile(username):
     page_now = request.args.get('page', 1, type=int)
