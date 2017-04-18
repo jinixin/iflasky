@@ -2,17 +2,17 @@
 Study "Flask Web Development", code cases for some chapters
 ***
 ## 中文说明
-#### 安装
-<code>
-wget http://download.redis.io/redis-stable.tar.gz
-tar xvzf redis-stable.tar.gz
-cd redis-stable
-make
-make install
-</code>
-#### 目的
+### 安装
+<code>wget http://download.redis.io/redis-stable.tar.gz</code>
+<code>tar xvzf redis-stable.tar.gz</code>
+<code>cd redis-stable</code>
+<code>make</code>
+<code>make install</code>
+
+### 目的
 本仓库的目的是记录学习《Flask Web开发》过程中，对照每节所讲理解后动手编写的代码。大部分与书中一样，但是仍存在一些修改，集中在逻辑和显示。所做的修改主要希望能更符合生产的要求，参照了一些网站的设计。修改后也可能存在很多不足，希望大家包容和指正。
-#### 改动
+
+### 改动
 * 点击找回密码的链接后，无需再输Email地址，直接输入新密码即可
 * 放宽对Markdown标签和属性的限制
 * 不提倡用户可以更换邮箱，用户的邮箱只能通过管理员才能更换
