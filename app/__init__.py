@@ -3,9 +3,10 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
-from config import config
+from config import config, Config
 from flask_login import LoginManager
 from flask_pagedown import PageDown
+from redis import ConnectionPool, Redis
 
 bootstrap = Bootstrap()
 mail = Mail()
@@ -15,6 +16,8 @@ pagedown = PageDown()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+pool = ConnectionPool(host=Config.REDIS_SERVER, port=Config.REDIS_PORT)
+redis_cli = Redis(connection_pool=pool)
 
 
 def create_app(config_name):

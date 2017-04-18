@@ -1,7 +1,7 @@
 # coding=utf-8
 from flask import render_template as rt, flash, redirect, url_for, request, abort, make_response
 from . import main
-from ..decorators import require_permit, require_admin_permit
+from ..decorators import require_permit, require_admin_permit, redis_page_cache
 from ..models import Permit, Post, Follow, Comment
 from flask_login import login_required, current_user
 from .forms import *
@@ -201,11 +201,13 @@ def show_common(username, flag):
 
 
 @main.route('/following/show/<username>')
+@redis_page_cache(expire=12 * 3600)
 def show_idols(username):
     return show_common(username, 1)
 
 
 @main.route('/followed/show/<username>')
+@redis_page_cache(expire=12 * 3600)
 def show_fans(username):
     return show_common(username, 2)
 

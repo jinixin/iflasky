@@ -18,6 +18,9 @@ class Config(object):
     MAIL_SENDER = 'STARS Admin <%s>' % MAIL_ADMIN
     MAIL_SUBJECT_PREFIX = '[%s]' % MAIL_SENDER[:5]
 
+    REDIS_SERVER = environ.get('REDIS_SERVER') or '127.0.0.1'
+    REDIS_PORT = environ.get('REDIS_PORT') or 6379
+
     @staticmethod
     def init_app(app):
         pass
