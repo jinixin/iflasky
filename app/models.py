@@ -75,23 +75,6 @@ class Post(db.Model):
         target.content_html = linkify(
             bhclean(markdown(content, output_format='html'), tags=allow_tags, attributes=allow_attributes, strip=False))
 
-    def fake_data(cls, count=200):
-        from random import seed, randint
-        import forgery_py
-
-        seed()
-        user_count = User.query.count()
-        for i in range(count):
-            author = User.query.get(randint(0, user_count - 1))
-            if author is None:
-                continue
-            post = Post(title=forgery_py.lorem_ipsum.word(),
-                        content=forgery_py.lorem_ipsum.paragraph(),
-                        timestamp=forgery_py.date.date(True),
-                        author=author)
-            db.session.add(post)
-            db.session.commit()
-
 
 db.event.listen(Post.content, 'set', Post.content_change)
 
@@ -195,27 +178,6 @@ class User(UserMixin, db.Model):
     def show_idols_article_sql(self):
         return Post.query.join(Follow, Follow.idol_id == Post.author_id).filter(
             or_(self.id == Follow.fans_id, self.id == Post.author_id))  # 或关系
-
-    @classmethod
-    def fake_data(cls, count=100):
-        from random import seed
-        import forgery_py
-
-        seed()
-        for i in range(count):
-            user = User(email=forgery_py.internet.email_address(),
-                        username=forgery_py.internet.user_name(True),
-                        name=forgery_py.name.full_name(),
-                        password='123456',
-                        confirmed=True,
-                        location=forgery_py.address.city(),
-                        about_me=forgery_py.lorem_ipsum.sentences(),
-                        member_since=forgery_py.date.date(True))
-            db.session.add(user)
-            try:
-                db.session.commit()
-            except Exception:
-                db.session.rollback()
 
 
 class AnonymousUser(AnonymousUserMixin):
