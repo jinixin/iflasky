@@ -2,7 +2,7 @@ from flask import jsonify, url_for, request, g
 from . import api
 from ..models import Comment, Post, Permit
 from .. import db
-from .decorators import require_api_permit
+from ..decorators import require_api_permit
 
 
 @api.route('/comment/<int:comment_id>')

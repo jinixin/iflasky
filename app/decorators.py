@@ -1,7 +1,7 @@
 # coding=utf-8
 from functools import wraps
 from flask_login import current_user
-from flask import abort, request
+from flask import abort, request, g
 from .models import Permit
 from . import redis_cli
 
@@ -11,6 +11,19 @@ def require_permit(permit):
         @wraps(func)  # help返回真实的函数信息
         def inner(*args, **kwargs):
             if not current_user.check_permit(permit):
+                abort(403)
+            return func(*args, **kwargs)
+
+        return inner
+
+    return decorator
+
+
+def require_api_permit(permit):
+    def decorator(func):
+        @wraps(func)
+        def inner(*args, **kwargs):
+            if not g.current_user.check_permit(permit):
                 abort(403)
             return func(*args, **kwargs)
 
