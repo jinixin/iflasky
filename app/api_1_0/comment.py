@@ -2,7 +2,7 @@ from flask import jsonify, url_for, request, g
 from . import api
 from ..models import Comment, Post, Permit
 from .. import db
-from ..decorators import require_permit
+from .decorators import require_api_permit
 
 
 @api.route('/comment/<int:comment_id>')
@@ -21,7 +21,7 @@ def get_post_comments(post_id):
 
 
 @api.route('/post/<int:post_id>/comments/', methods=['POST'])
-@require_permit(Permit.comment)
+@require_api_permit(Permit.comment)
 def write_comment(post_id):
     post = Post.query.get_or_404(post_id)
     comment = Comment(content=request.json.get('comment'))

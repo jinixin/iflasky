@@ -11,7 +11,7 @@ from ..models import Permit
 
 
 @auth.before_app_request
-def before_request():
+def check_whether_confirmed():  # before_app_request作用范围是整个应用
     if current_user.is_authenticated:
         current_user.update_last_seen()
         if not current_user.confirmed and request.endpoint[:5] != 'auth.' and request.endpoint != 'static':

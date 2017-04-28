@@ -13,5 +13,5 @@ def server_error(e):
 
 
 @main.app_errorhandler(403)
-def server_error(e):
+def forbidden(e):
     return rt('error/403.html'), 403

@@ -2,7 +2,8 @@ from flask import jsonify, url_for, request, g
 from . import api
 from ..models import Post, Permit
 from .. import db
-from ..decorators import require_permit
+from .decorators import require_api_permit
+from .errors import forbidden
 
 
 @api.route('/post/<int:post_id>')
@@ -12,9 +13,11 @@ def get_post(post_id):
 
 
 @api.route('/post/<int:post_id>', methods=['PUT'])
-@require_permit(Permit.write_article)
+@require_api_permit(Permit.write_article)
 def update_post(post_id):
     post = Post.query.filter_by(id=post_id).first_or_404()
+    if g.current_user != post.author and not g.current_user.is_administrator():
+        return forbidden()
     raw = request.json
     post.title = raw.get('title', post.title)
     post.summary = raw.get('summary', post.summary)
@@ -32,7 +35,7 @@ def get_all_posts():
 
 
 @api.route('/post/', methods=['POST'])
-@require_permit(Permit.write_article)
+@require_api_permit(Permit.write_article)
 def write_article():
     raw = request.json
     title = raw.get('title')

@@ -148,7 +148,7 @@ class User(UserMixin, db.Model):
         return True
 
     @classmethod
-    def check_api_token(token):  # 接受令牌并验证
+    def check_api_token(cls, token):  # 接受令牌并验证
         user_id = User.token2id(token)
         return User.query.get(user_id)
 
