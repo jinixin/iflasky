@@ -46,7 +46,7 @@ def register():
         user = User(username=form.username.data, email=form.email.data, password=form.password.data)
         db.session.add(user)
         db.session.commit()  # 必须提交，否则不能获得token
-        token = user.make_confirm_token()
+        token = user.make_token()
         send_email([user.email], 'Confirm Your Account', 'auth/mail/confirm', user=user, token=token)
         # 必须要传user，html中current_user不可用
         flash('A confirmation email has been sent to your mail.')
@@ -59,7 +59,7 @@ def register():
 def confirm(token):
     if current_user.confirmed:
         pass
-    elif current_user.check_token(token):
+    elif current_user.check_confirm_token(token):
         flash('You have confirmed your account. Thanks!')
     else:
         flash('The confirmation link is invalid.')
@@ -69,7 +69,7 @@ def confirm(token):
 @auth.route('/confirm')
 @login_required
 def resend_confirmation():
-    token = current_user.make_confirm_token()
+    token = current_user.make_token()
     send_email([current_user.email], 'Confirm Your Account', 'auth/mail/confirm', user=current_user, token=token)
     # 为了统一使用user，故传入current_user
     flash('A new confirmation email has been sent to your mail.')
@@ -95,7 +95,7 @@ def request_reset_password():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None:
-            token = user.make_confirm_token()
+            token = user.make_token()
             send_email([user.email], 'Reset password', 'auth/mail/resetPassword', user=user, token=token)
             flash('An email to reset password has been sent to you mail.')
             return redirect(url_for('auth.login'))

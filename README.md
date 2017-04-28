@@ -15,10 +15,11 @@ Study "Flask Web Development", code cases for some chapters
 * 管理评论部分，将修改评论状态的两个函数合并为一个
 * 修复当输入为连续的英文字母或数字时，文章和评论不换行的问题
 * 增加Redis缓存系统，减少页面响应时间
+* 对“RESTful API”进行优化
 
 ### 配置
-* #####向MySQL导入“bgone.sql”
-* #####安装redis服务端
+* 向MySQL导入“bgone.sql”
+* 安装redis服务端  
 <code>wget http://download.redis.io/redis-stable.tar.gz</code>   
 <code>tar xvzf redis-stable.tar.gz</code>   
 <code>cd redis-stable</code>   
@@ -28,3 +29,4 @@ Study "Flask Web Development", code cases for some chapters
 ### 运行
 * <code>redis-server</code>   启动redis服务端   
 * <code>./manage.py runserver</code>   启动整个程序
+

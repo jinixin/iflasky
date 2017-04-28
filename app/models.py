@@ -3,7 +3,7 @@ from . import db, login_manager
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app
+from flask import current_app, url_for
 from datetime import datetime
 from hashlib import md5
 from markdown import markdown
@@ -75,6 +75,19 @@ class Post(db.Model):
         target.content_html = linkify(
             bhclean(markdown(content, output_format='html'), tags=allow_tags, attributes=allow_attributes, strip=False))
 
+    def to_json(self):
+        post_json = {
+            'url': url_for('api.get_post', post_id=self.id, _external=True),
+            'title': self.title,
+            'summary': self.summary,
+            'content': self.content_html,
+            'timestamp': self.timestamp,
+            'author': url_for('api.get_user', user_id=self.author_id, _external=True),
+            'comments': url_for('api.get_post_comments', post_id=self.id, _external=True),
+            'comments_count': self.comment_list.count(),
+        }
+        return post_json
+
 
 db.event.listen(Post.content, 'set', Post.content_change)
 
@@ -122,17 +135,22 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def make_confirm_token(self, expire=3600):
+    def make_token(self, expire=3600):  # 产生令牌
         s = Serializer(current_app.config['SECRET_KEY'], expire)
         return s.dumps({'num': self.id})
 
-    def check_token(self, token):
+    def check_confirm_token(self, token):  # 接受令牌并验证
         user_id = self.token2id(token)
         if user_id != self.id:
             return False
         self.confirmed = True
         db.session.add(self)
         return True
+
+    @classmethod
+    def check_api_token(token):  # 接受令牌并验证
+        user_id = User.token2id(token)
+        return User.query.get(user_id)
 
     @staticmethod
     def token2id(token):
@@ -179,6 +197,16 @@ class User(UserMixin, db.Model):
         return Post.query.join(Follow, Follow.idol_id == Post.author_id).filter(
             or_(self.id == Follow.fans_id, self.id == Post.author_id))  # 或关系
 
+    def to_json(self):
+        user_json = {
+            'url': url_for('api.get_user', user_id=self.id, _external=True),
+            'email': self.email,
+            'username': self.username,
+            'posts': url_for('api.get_user_posts', user_id=self.id, _external=True),
+            'posts_count': self.post_list.count(),
+        }
+        return user_json
+
 
 class AnonymousUser(AnonymousUserMixin):
     def check_permit(self, permit):
@@ -204,3 +232,14 @@ class Comment(db.Model):
     closed = db.Column(db.Boolean, default=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def to_json(self):
+        comment_json = {
+            'url': url_for('api.get_comment', comment_id=self.id, _external=True),
+            'content': self.content,
+            'timestamp': self.timestamp,
+            'closed': self.closed,
+            'post': url_for('api.get_post', post_id=self.post_id, _external=True),
+            'author': url_for('api.get_user', user_id=self.author_id, _external=True),
+        }
+        return comment_json
