@@ -27,7 +27,7 @@ def login():
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))
         else:
-            flash('Invalid username or password.')
+            flash('Invalid username or password.', 'warning')
     return rt('auth/login.html', form=form)
 
 
@@ -35,7 +35,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out')
+    flash('You have been logged out.', 'success')
     return redirect(url_for('main.index'))
 
 
@@ -49,7 +49,7 @@ def register():
         token = user.make_token()
         send_email([user.email], 'Confirm Your Account', 'auth/mail/confirm', user=user, token=token)
         # 必须要传user，html中current_user不可用
-        flash('A confirmation email has been sent to your mail.')
+        flash('A confirmation email has been sent to your mail.', 'info')
         return redirect(url_for('main.index'))
     return rt('auth/register.html', form=form)
 
@@ -60,9 +60,9 @@ def confirm(token):
     if current_user.confirmed:
         pass
     elif current_user.check_confirm_token(token):
-        flash('You have confirmed your account. Thanks!')
+        flash('You have confirmed your account. Thanks!', 'success')
     else:
-        flash('The confirmation link is invalid.')
+        flash('The confirmation link is invalid.', 'danger')
     return redirect(url_for('main.index'))
 
 
@@ -72,7 +72,7 @@ def resend_confirmation():
     token = current_user.make_token()
     send_email([current_user.email], 'Confirm Your Account', 'auth/mail/confirm', user=current_user, token=token)
     # 为了统一使用user，故传入current_user
-    flash('A new confirmation email has been sent to your mail.')
+    flash('A new confirmation email has been sent to your mail.', 'info')
     return rt('index.html')
 
 
@@ -84,7 +84,7 @@ def change_password():
         current_user.password = form.new_password.data
         db.session.add(current_user)
         send_email([current_user.email], 'Your password has changed', 'auth/mail/ChangePassword')
-        flash('You have changed the password.')
+        flash('You have changed the password.', 'success')
         return redirect(url_for('main.index'))
     return rt('auth/changePassword.html', form=form)
 
@@ -97,10 +97,10 @@ def request_reset_password():
         if user is not None:
             token = user.make_token()
             send_email([user.email], 'Reset password', 'auth/mail/resetPassword', user=user, token=token)
-            flash('An email to reset password has been sent to you mail.')
+            flash('An email to reset password has been sent to you mail.', 'info')
             return redirect(url_for('auth.login'))
         else:
-            flash('The email not existed.')
+            flash('The email not existed.', 'warning')
             return redirect(url_for('auth.request_reset_password'))
     return rt('auth/resetPassword.html', form=form)
 
@@ -113,7 +113,7 @@ def reset_password(token):
         user = User.query.get(user_id)
         user.password = form.new_password.data
         db.session.add(user)
-        flash('The password has been reset.')
+        flash('The password has been reset.', 'success')
         return redirect(url_for('auth.login'))
     else:
         user_id = User.token2id(token)

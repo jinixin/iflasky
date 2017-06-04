@@ -30,7 +30,7 @@ def edit_profile():
         current_user.location = form.location.data
         current_user.about_me = form.about_me.data
         db.session.add(current_user)
-        flash('Edit profile successfully.')
+        flash('Edit profile successfully.', 'success')
         return redirect(url_for('main.user_profile', username=current_user.username))
     form.name.data = current_user.name
     form.location.data = current_user.location
@@ -54,7 +54,7 @@ def admin_edit_profile(user_id):
         user.about_me = form.about_me.data
         # user.avatar_hash = md5(user.email.encode('utf-8')).hexdigest() #邮箱变了，头像不该变
         db.session.add(user)
-        flash('Administrator edit profile successfully.')
+        flash('Administrator edit profile successfully.', 'success')
         return redirect(url_for('main.user_profile', username=user.username))
     form.email.data = user.email
     form.username.data = user.username
@@ -77,7 +77,7 @@ def write_article():
         post = Post(title=form.title.data, content=form.content.data, summary=form.summary.data,
                     author=current_user._get_current_object())
         db.session.add(post)
-        flash('Article publish successfully.')
+        flash('Article publish successfully.', 'success')
         return redirect(url_for('main.user_profile', username=current_user.username))
     return rt('article/edit_post.html', form=form)
 
@@ -120,7 +120,7 @@ def show_article(article_id):
     if form.validate_on_submit():
         comment = Comment(content=form.content.data, author=current_user._get_current_object(), post=post)
         db.session.add(comment)
-        flash('Comment publish successfully.')
+        flash('Comment publish successfully.', 'success')
         return redirect(url_for('main.show_article', article_id=article_id) + '#comment')  # 跳转锚点
     comment_list = Comment.query.filter_by(post_id=article_id).order_by(Comment.timestamp).all()
     return rt('article/post.html', post=post, comment_list=comment_list, form=form)
@@ -141,7 +141,7 @@ def rewrite_article(article_id):
         post.summary = form.summary.data
         post.content = form.content.data
         db.session.add(post)
-        flash('Article changed successfully.')
+        flash('Article changed successfully.', 'success')
         return redirect(url_for('main.show_article', article_id=post.id))
     form.summary.data = post.summary
     form.title.data = post.title
@@ -155,14 +155,14 @@ def rewrite_article(article_id):
 def follow(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
-        flash('The user is not existed.')
+        flash('The user is not existed.', 'danger')
         return redirect(url_for('main.index'))
     elif current_user.is_following(user):
-        flash('The user has already been following.')
+        flash('The user has already been following.', 'info')
         return redirect(url_for('main.user_profile', username=username))
     else:
         current_user.follow(user)
-        flash('You have followed %s successfully.' % username)
+        flash('You have followed %s successfully.' % username, 'success')
         return redirect(url_for('main.user_profile', username=username))
 
 
@@ -172,14 +172,14 @@ def follow(username):
 def unfollow(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
-        flash('The user is not existed.')
+        flash('The user is not existed.', 'danger')
         return redirect(url_for('main.index'))
     elif not current_user.is_following(user):
-        flash('You have not followed %s.' % username)
+        flash('You have not followed %s.' % username, 'info')
         return redirect(url_for('main.user_profile', username=username))
     else:
         current_user.unfollow(user)
-        flash('You have unfollowed %s successfully.' % username)
+        flash('You have unfollowed %s successfully.' % username, 'success')
         return redirect(url_for('main.user_profile', username=username))
 
 
