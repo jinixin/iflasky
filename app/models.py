@@ -92,6 +92,16 @@ class Post(db.Model):
 db.event.listen(Post.content, 'set', Post.content_change)
 
 
+class Message(db.Model):
+    __tablename__ = 'messages'
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    content = db.Column(db.String(128))
+    read = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -112,6 +122,12 @@ class User(UserMixin, db.Model):
     fans_list = db.relationship('Follow', foreign_keys=[Follow.idol_id], backref=db.backref('idol', lazy='joined'),
                                 lazy='dynamic', cascade='all, delete-orphan')
     comment_list = db.relationship('Comment', backref='author', lazy='dynamic')
+    send_list = db.relationship('Message', foreign_keys=[Message.sender_id],
+                                backref=db.backref('sender', lazy='joined'),
+                                lazy='dynamic', cascade='all, delete-orphan')
+    receive_list = db.relationship('Message', foreign_keys=[Message.receiver_id],
+                                   backref=db.backref('receiver', lazy='joined'),
+                                   lazy='dynamic', cascade='all, delete-orphan')
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)  # super(类名, self)==基类引用
