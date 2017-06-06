@@ -17,7 +17,7 @@ def index():
 def user_profile(username):
     user = User.query.filter_by(username=username).first_or_404()
     form = EditMessageForm()
-    if form.validate_on_submit():
+    if current_user.is_authenticated and form.validate_on_submit():
         message = Message(sender_id=current_user.id, receiver_id=user.id, content=form.content.data)
         db.session.add(message)
         flash('The message has been sent.', 'success')
