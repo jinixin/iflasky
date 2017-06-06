@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : utf-8
 
- Date: 06/05/2017 16:31:59 PM
+ Date: 06/06/2017 17:07:54 PM
 */
 
 SET NAMES utf8;
@@ -55,17 +55,17 @@ CREATE TABLE `follows` (
 DROP TABLE IF EXISTS `messages`;
 CREATE TABLE `messages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `sender_id` int(11) DEFAULT NULL,
-  `receiver_id` int(11) DEFAULT NULL,
-  `content` varchar(128) COLLATE utf8_bin DEFAULT NULL,
-  `read` tinyint(1) DEFAULT NULL,
-  `timestamp` datetime DEFAULT NULL,
+  `sender_id` int(11) NOT NULL,
+  `receiver_id` int(11) NOT NULL,
+  `content` varchar(256) COLLATE utf8_bin NOT NULL,
+  `read` tinyint(1) NOT NULL,
+  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `receiver_id` (`receiver_id`),
   KEY `sender_id` (`sender_id`),
   CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`),
   CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 --  Table structure for `posts`

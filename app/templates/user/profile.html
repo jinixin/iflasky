@@ -1,17 +1,47 @@
 {% extends "base.html" %}
 
 {% import "_pagination.html" as page_widget %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
+<!--Modal-->
+<div class="modal fade" id="sendMessage" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Send message to {{user.username}}</h4>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    {{ message_form.hidden_tag() }}<!--跨站请求伪造攻击防御-->
+                    {{ message_form.content.label }}<br/>
+                    {{ message_form.content(class="form-control") }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    {{ message_form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="page-header">
     <img src="{{ user.make_gravatar_url(256) }}" alt="headImage" class="img-rounded img-responsive image-thumbnail">
     <div class="profile-header-main">
-        <h1>{{ user.username }}
+        <h1 style="display:inline;">
+            {{ user.username }}
             {% if user.name %}
             <small>
                 {{ user.name }}
             </small>
             {% endif %}
+            &nbsp;
+            <h4 style="display:inline;">
+                <a class="glyphicon glyphicon-envelope" data-toggle="modal" data-target="#sendMessage"></a>
+            </h4>
         </h1>
         <p>
         <h3>

@@ -2,7 +2,7 @@
 from flask import render_template as rt, flash, redirect, url_for, request, abort, make_response
 from . import main
 from ..decorators import require_permit, require_admin_permit, redis_page_cache
-from ..models import Permit, Post, Follow, Comment
+from ..models import Permit, Post, Follow, Comment, Message
 from flask_login import login_required, current_user
 from .forms import *
 from .. import db
@@ -13,12 +13,18 @@ def index():
     return rt('index.html')
 
 
-@main.route('/user/<username>')
+@main.route('/user/<username>', methods=['GET', 'POST'])
 def user_profile(username):
-    page_now = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
+    form = EditMessageForm()
+    if form.validate_on_submit():
+        message = Message(sender_id=current_user.id, receiver_id=user.id, content=form.content.data)
+        db.session.add(message)
+        flash('The message has been sent.', 'success')
+        return redirect(url_for('main.user_profile', username=user.username))
+    page_now = request.args.get('page', 1, type=int)
     pagination = user.post_list.order_by(Post.timestamp.desc()).paginate(page_now, per_page=15, error_out=True)
-    return rt('user/profile.html', user=user, posts=pagination.items, pagination=pagination)
+    return rt('user/profile.html', user=user, posts=pagination.items, pagination=pagination, message_form=form)
 
 
 @main.route('/user/editProfile', methods=['GET', 'POST'])

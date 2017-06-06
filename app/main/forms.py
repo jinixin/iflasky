@@ -49,3 +49,8 @@ class EditPostForm(FlaskForm):
 class EditCommentForm(FlaskForm):
     content = TextAreaField('Enter your comment', validators=[DataRequired(), Length(1, 256)])
     submit = SubmitField('Submit')
+
+
+class EditMessageForm(FlaskForm):
+    content = TextAreaField('Content', validators=[DataRequired(), Length(1, 256)])
+    submit = SubmitField('Send message')
