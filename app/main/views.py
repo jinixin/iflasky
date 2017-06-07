@@ -119,6 +119,20 @@ def show_idol_article_list():
     return response
 
 
+@main.route('/message/showAllList/<int:kind>')
+@login_required
+def show_message_list(kind):
+    if kind == 0:
+        messages = Message.query.filter_by(sender_id=current_user.id).order_by(Message.timestamp).all()
+        for message in messages:
+            message.user = message.receiver
+    elif kind == 1:
+        messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.timestamp).all()
+        for message in messages:
+            message.user = message.sender
+    return rt('message/show_list.html', kind=kind, messages=messages)
+
+
 @main.route('/article/<int:article_id>', methods=['GET', 'POST'])
 def show_article(article_id):
     post = Post.query.get_or_404(article_id)

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% import "_pagination.html" as page_widget %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Message List</h1>
+</div>
+<div>
+    <ul class="nav nav-tabs" role="tablist">
+        {% if kind == 0 %}
+        <li role="presentation" class="active">
+            <a href="{{ url_for('main.show_message_list', kind=0) }}">Send</a>
+        </li>
+        <li role="presentation">
+            <a href="{{ url_for('main.show_message_list', kind=1) }}">Receive</a>
+        </li>
+        {% else %}
+        <li role="presentation">
+            <a href="{{ url_for('main.show_message_list', kind=0) }}">Send</a>
+        </li>
+        <li role="presentation" class="active">
+            <a href="{{ url_for('main.show_message_list', kind=1) }}">Receive</a>
+        </li>
+        {% endif %}
+    </ul>
+    {% include "message/_message_list.html" %}
+</div>
+{% endblock %}

@@ -55,6 +55,16 @@
     word-break: break-all;
 }
 
+.message-list-content{
+    min-height: 20px;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.message-list-label{
+    float: right;
+}
+
 .relation{
     margin-top: 50px;
 }

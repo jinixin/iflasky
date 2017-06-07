@@ -7,7 +7,7 @@
     <h1>Article List</h1>
 </div>
 <div>
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" role="tablist">
         {% if current_user.is_authenticated %}
         {% if show_idol_cookie != '1' %}
         <li role="presentation" class="active"><a href="{{ url_for('main.show_all_article_list') }}">All</a></li>

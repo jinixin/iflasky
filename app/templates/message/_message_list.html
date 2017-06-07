@@ -1,0 +1,38 @@
+<ul class="list-group">
+    {% for message in messages %}
+    <li class="list-group-item">
+        <div class="media">
+            <div class="media-left">
+                <a href="{{ url_for('main.user_profile', username=message.user.username) }}">
+                    <img class="media-object" src="{{ message.user.make_gravatar_url(60) }}" alt="headImage">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading post-list-title">
+                    <a href="{{ url_for('main.user_profile', username=message.user.username) }}">
+                        {{ message.user.username }}
+                    </a>
+                    <span class="post-list-time">{{ moment(message.timestamp).fromNow(refresh=True) }}</span>
+                </h4>
+                <div class="clearfix"></div>
+                <div class="message-list-content">
+                    {{ message.content }}
+                </div>
+                {% if kind == 1 %}
+                <div>
+                    <div class="message-list-label">
+                        <a href="">
+                            <span class="label label-warning">Ignore</span>
+                        </a>
+                        <a href="{{ url_for('main.user_profile', username=message.user.username) }}">
+                            <span class="label label-success">Replay</span>
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>

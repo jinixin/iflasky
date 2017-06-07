@@ -35,6 +35,8 @@
                             <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;My Profile</a></li>
                         <li><a href="{{ url_for('auth.change_password') }}">
                             <span class="glyphicon glyphicon-wrench"></span>&nbsp;&nbsp;Change Password</a></li>
+                        <li><a href="{{ url_for('main.show_message_list', kind=0) }}">
+                            <span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;Message Box</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="{{ url_for('auth.logout') }}">
                             <span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Sign Out</a>
