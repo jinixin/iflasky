@@ -4,7 +4,9 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Article List</h1>
+    <h1 style="display:inline;">Article List</h1>
+    <h4 style="display:inline;"><a href="{{ url_for('main.write_article') }}" class="pull-right">Write Article</a></h4>
+    <div class="clearfix"></div>
 </div>
 <div>
     <ul class="nav nav-tabs" role="tablist">
