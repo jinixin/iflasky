@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 
+{% block navbar_style %}
+<nav hidden class="navbar navbar-fixed-top" role="navigation">
+{% endblock %}
+
+{% block content %}
+<div class="main-picture" style="background-image:url({{ url_for('static', filename='main.jpg') }});"></div>
+<div style="height:300px;">
+</div>
+{{ super() }}
+{% endblock %}
+
 {% block scripts %}
 {{ super() }}
 <script type="text/javascript" language="javascript">
@@ -14,15 +25,4 @@ $(document).ready(function(){
     });
 });
 </script>
-{% endblock %}
-
-{% block navbar_style %}
-<nav hidden class="navbar navbar-fixed-top" role="navigation">
-{% endblock %}
-
-{% block content %}
-<div style="height:600px;background-image:url({{ url_for('static', filename='main.jpg') }});background-size:cover;no-repeat;">
-</div>
-<div style="height:300px;">
-</div>
 {% endblock %}

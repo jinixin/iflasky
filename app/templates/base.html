@@ -9,8 +9,8 @@
 {% block title %}「STARS」{% endblock %}
 
 {% block navbar %}
-    {% block navbar_style %}
-    <nav class="navbar" role="navigation">
+{% block navbar_style %}
+<nav class="navbar navbar-inverse" role="navigation">
     {% endblock %}
     <div class="container">
         <div class="navbar-header">
@@ -72,9 +72,38 @@
     {% block page_content %}{% endblock %}
 </div>
 <div class="page-bottom-left"></div>
+<footer>
+    <div class="container">
+        <p class="footer-links">
+            <a href="">GitHub</a>
+            <a href="">CSDN</a>
+            <a href="">Contact</a>
+            <a href="">About</a>
+        </p>
+        <br/>
+        <p>the stars, our destination</p>
+    </div>
+</footer>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
 {{ moment.include_moment() }}
+<script type="text/javascript" language="javascript">
+$(document).ready(function(){
+    function footerPosition(){
+        $("footer").removeClass("fixed-footer");
+        var contentHeight = document.body.scrollHeight,//网页正文全文高度
+            windowHeight = window.innerHeight;//可视窗口高度，不包括浏览器顶部工具栏
+        if(contentHeight <= windowHeight){
+            //当网页正文高度小于可视窗口高度时，为footer添加类fixed-footer
+            $("footer").addClass("fixed-footer");
+        }else{
+            $("footer").removeClass("fixed-footer");
+        }
+    }
+    footerPosition();
+    $(window).resize(footerPosition);
+});
+</script>
 {% endblock %}

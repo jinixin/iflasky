@@ -3,7 +3,7 @@
     margin-bottom: 20px;
 }
 
-.profile-header-main {
+.profile-header-main{
     float: left;
     margin-left: 60px;
 }
@@ -39,7 +39,7 @@
 }
 
 .page-bottom-left{
-    margin-bottom: 30px;
+    margin-bottom: 50px;
 }
 
 .post-title{
@@ -95,4 +95,32 @@
 
 .comment-list-button{
     float: right;
+}
+
+footer{
+    height: 160px;
+    background-color: #2a2730;
+    color: gray;
+    padding: 40px 10px 50px 50px;
+}
+
+.main-picture{
+    height: 700px;
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.fixed-footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-links{
+    font-weight: bold;
+}
+.footer-links a{
+    color: white;
+    margin-right: 30px;
 }

@@ -18,7 +18,7 @@ Study "Flask Web Development", code cases for some chapters
 * 对“RESTful API”进行优化
 * 对flash提示进行分类显示：success，info，warning，danger
 * 增加消息系统，用户之间可以互相发送、接收消息
-* 全新的首页设计
+* 全新的设计，增加footer，首页隐藏式导航条
 
 ## 配置
 * 创建数据库后，向MySQL导入“bgone.sql”
