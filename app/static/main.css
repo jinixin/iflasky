@@ -135,3 +135,25 @@ footer{
     text-align: center;
     font-weight: bold;
 }
+
+.search-form{
+    position: relative;
+    top: 50%;
+    text-align: center;
+}
+
+.search-form-text{
+    width: 500px;
+    height: 40px;
+    font-size: 25px;
+}
+
+.search-form-submit{
+    width: 100px;
+    height: 40px;
+    position: relative;
+    top: -5px;
+    left: -3px;
+    background-color: gray-light;
+    font-weight: bold;
+}

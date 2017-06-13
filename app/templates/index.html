@@ -5,7 +5,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="main-picture" style="background-image:url({{ url_for('static', filename='main.jpg') }});"></div>
+<div class="main-picture" style="background-image:url({{ url_for('static', filename='main.jpg') }});">
+    <form class="search-form" action="" method="POST">
+        <input class="search-form-text" type="text" name="keyword">
+        <input class="search-form-submit" type="submit" value="Search">
+    </form>
+</div>
 <div class="row" style="margin:30px;">
     {% for user in users %}
     <div class="col-md-4">
