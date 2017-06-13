@@ -10,7 +10,8 @@ from .. import db
 
 @main.route('/')
 def index():
-    return rt('index.html')
+    users = User.three_people_most_comment()
+    return rt('index.html', users=users)
 
 
 @main.route('/user/<username>', methods=['GET', 'POST'])

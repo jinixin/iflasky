@@ -109,6 +109,7 @@ footer{
     background-position: center center;
     background-size: contain;
     background-repeat: no-repeat;
+    margin-bottom: 50px;
 }
 
 .fixed-footer{
@@ -123,4 +124,14 @@ footer{
 .footer-links a{
     color: white;
     margin-right: 30px;
+}
+
+.caption p{
+    text-align: center;
+}
+
+.caption i{
+    display: block;
+    text-align: center;
+    font-weight: bold;
 }

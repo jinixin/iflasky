@@ -213,6 +213,19 @@ class User(UserMixin, db.Model):
         return Post.query.join(Follow, Follow.idol_id == Post.author_id).filter(
             or_(self.id == Follow.fans_id, self.id == Post.author_id))  # 或关系
 
+    @classmethod
+    def three_people_most_comment(cls):
+        cursor = db.engine.execute('''select posts.author_id, count(*) as num
+                                     from comments inner join posts on post_id = posts.id
+                                     group by posts.author_id
+                                     order by num desc
+                                     limit 0, 3;
+                                     ''')
+        result = cursor.fetchall()
+        for index, item in enumerate(result):
+            result[index] = User.query.get(item[0])
+        return result
+
     def to_json(self):
         user_json = {
             'url': url_for('api.get_user', user_id=self.id, _external=True),

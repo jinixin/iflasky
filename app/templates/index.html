@@ -6,7 +6,26 @@
 
 {% block content %}
 <div class="main-picture" style="background-image:url({{ url_for('static', filename='main.jpg') }});"></div>
-<div style="height:300px;">
+<div class="row" style="margin:30px;">
+    {% for user in users %}
+    <div class="col-md-4">
+        <div class="thumbnail" style="border:0;">
+            <a href="{{ url_for('main.user_profile', username=user.username) }}">
+                <img src="{{ user.make_gravatar_url(150) }}" alt="headImage" class="img-circle">
+            </a>
+            <div class="caption">
+                <h2 style="text-align:center;">{{ user.username }}</h2>
+                <p>Idols: {{ user.idol_list.count() }},&nbsp;Fans: {{ user.fans_list.count() }}</p>
+                <p>{{ user.post_list.count() }} posts, {{ user.comment_list.count() }} comments</p>
+                <i>
+                    {% if user.about_me %}
+                    {{ user.about_me }}
+                    {% endif %}
+                </i>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {{ super() }}
 {% endblock %}
