@@ -2,11 +2,14 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>
-        <span class="post-title">{{ post.title }}</span>
-        <span class="post-info"><small>{{ post.author.name }}, {{ post.timestamp }}</small></span>
-        <div class="clearfix"></div>
-    </h1>
+    <h1 class="post-title">{{ post.title }}</h1>
+    <div class="post-info">
+        <span>{{ post.timestamp }}</span><br/>
+        <a href="{{ url_for('main.user_profile', username=post.author.username) }}">
+            <img src="{{ post.author.make_gravatar_url(15) }}" alt="headImage">&nbsp;{{ post.author.username }}
+        </a>
+    </div>
+    <div class="clearfix"></div>
 </div>
 <div class="post-content">
     {% if post.content_html %}

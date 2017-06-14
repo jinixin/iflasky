@@ -47,7 +47,10 @@
 }
 
 .post-info{
+    margin-top: 25px;
     float: right;
+    text-align: center;
+    font-weight: bold;
 }
 
 .post-content{
