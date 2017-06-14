@@ -14,6 +14,10 @@
     margin-right: 120px;
 }
 
+.profile-header-plug i{
+    font-weight: bold;
+}
+
 .post-list-time{
     float: right;
     font-size: 15px;

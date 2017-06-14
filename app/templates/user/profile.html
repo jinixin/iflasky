@@ -34,9 +34,7 @@
         <h1 style="display:inline;">
             {{ user.username }}
             {% if user.name %}
-            <small>
-                {{ user.name }}
-            </small>
+            <small>{{ user.name }}</small>
             {% endif %}
             {% if current_user.is_authenticated and current_user != user %}
             &nbsp;
@@ -49,7 +47,12 @@
         <h3>
             {{ user.email }}<br/>
             {% if user.location %}
-            <a href="http://www.openstreetmap.org/search?query={{ user.location }}">{{ user.location }}</a><br/>
+            <div style="margin-top:15px;">
+                <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>&nbsp;
+                <a href="http://www.openstreetmap.org/search?query={{ user.location }}" target="_Blank">
+                    {{ user.location }}
+                </a>
+            </div>
             {% endif %}
         </h3>
         </p>
