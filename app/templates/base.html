@@ -3,7 +3,8 @@
 {% block head %}
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
 {% endblock %}
 
 {% block title %}「STARS」{% endblock %}
@@ -89,6 +90,9 @@
 {% block scripts %}
 {{ super() }}
 {{ moment.include_moment() }}
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/moment-with-locales.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 <script type="text/javascript" language="javascript">
 $(document).ready(function(){
     function footerPosition(){
