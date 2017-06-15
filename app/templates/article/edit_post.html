@@ -9,6 +9,7 @@
 
 {% if current_user.is_authenticated and current_user.check_permit(Permit.write_article) %}
 {{ wtf.quick_form(form) }}
+<div style="margin-bottom:50px;"></div>
 {% endif %}
 {% endblock %}
 
